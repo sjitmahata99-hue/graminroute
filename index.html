@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GraminRoute - Har Safar Aasaan</title>
+
+  <!-- Leaflet Map CSS & JS (Free Real-time Interactive Map) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Firebase Compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+  
+  <style>
+    :root {
+      --primary: #059669;
+      --primary-dark: #064e3b;
+      --primary-light: #ecfdf5;
+      --accent: #10b981;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --bg: #f3f4f6;
+      --card-bg: #ffffff;
+      --border: #e5e7eb;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, -apple-system, sans-serif;
+      -webkit-tap-highlight-color: rgba(0,0,0,0);
+    }
+
+    body {
+      background: #0f172a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .app-screen {
+      width: 100%;
+      max-width: 430px;
+      height: 100vh;
+      max-height: 900px;
+      background: var(--bg);
+      position: relative;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (min-width: 450px) {
+      .app-screen {
+        height: 860px;
+        border-radius: 36px;
+        border: 7px solid #1e293b;
+      }
+    }
+
+    .view {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      flex: 1;
+      padding-bottom: 85px;
+    }
+
+    .view.active {
+      display: flex !important;
+    }
+
+    .app-header {
+      background: white;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .app-header .location {
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .banner {
+      background: linear-gradient(135deg, #064e3b, #10b981);
+      color: white;
+      margin: 14px 16px;
+      padding: 20px;
+      border-radius: var(--radius-md);
+    }
+
+    .banner h3 {
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .banner p {
+      font-size: 12px;
+      opacity: 0.9;
+      margin-top: 4px;
+    }
+
+    .banner-btn {
+      margin-top: 14px;
+      background: white;
+      color: var(--primary-dark);
+      border: none;
+      padding: 8px 16px;
+      font-weight: bold;
+      font-size: 12px;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: bold;
+      padding: 6px 18px;
+      color: var(--text-main);
+    }
+
+    .grid-services {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 10px 16px;
+    }
+
+    .service-card {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 14px 8px;
+      text-align: center;
+      cursor: pointer;
+      border: 1px solid #f1f5f9;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      user-select: none;
+    }
+
+    .service-card:active {
+      transform: scale(0.96);
+    }
+
+    .service-card .icon-box {
+      font-size: 26px;
+      margin-bottom: 6px;
+    }
+
+    .service-card h4 {
+      font-size: 13px;
+      color: var(--text-main);
+    }
+
+    .service-card p {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .subpage-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: white;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .subpage-nav h3 {
+      font-size: 17px;
+    }
+
+    .form-box {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .input-group {
+      background: white;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: bold;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .input-group input, .input-group select, .input-group textarea {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      background: transparent;
+      color: var(--text-main);
+    }
+    .segmented-control {
+      display: flex;
+      background: #e2e8f0;
+      border-radius: 25px;
+      padding: 4px;
+      gap: 4px;
+      margin: 10px 16px;
+    }
+
+    .segmented-control button {
+      flex: 1;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 12px;
+      color: var(--text-muted);
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .segmented-control button.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .item-list {
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .item-card {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+
+    .item-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .item-info .item-avatar {
+      font-size: 26px;
+    }
+
+    .item-title {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .item-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .item-fare strong {
+      font-size: 15px;
+      color: var(--primary);
+    }
+
+    .primary-btn {
+      background: var(--primary);
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      padding: 14px;
+      border-radius: 24px;
+      cursor: pointer;
+      text-align: center;
+      margin: 10px 16px;
+    }
+
+    .primary-btn:active {
+      opacity: 0.9;
+    }
+
+    #liveMap {
+      height: 180px;
+      width: 100%;
+      background: #e5e7eb;
+      border-bottom: 1px solid var(--border);
+      z-index: 1;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 14px 16px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
+    .stat-card small {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .stat-card h2 {
+      font-size: 20px;
+      color: var(--primary-dark);
+      margin-top: 4px;
+    }
+
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 430px;
+      margin: auto;
+      background: white;
+      height: 65px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      z-index: 99999;
+      pointer-events: auto !important;
+    }
+
+    .nav-item {
+      flex: 1;
+      height: 100%;
+      background: none;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-item span {
+      font-size: 20px;
+      pointer-events: none;
+    }
+
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 100000;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+    }
+
+    .modal-body {
+      background: white;
+      width: 100%;
+      max-width: 430px;
+      border-radius: 24px 24px 0 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .lang-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div class="app-screen">
+
+  <!-- HOME SCREEN -->
+  <div id="homeView" class="view active">
+    <div class="app-header">
+      <div class="location">📍 <strong>Belpahari, West Bengal</strong></div>
+      <button class="icon-btn" id="btnOpenLang">🌐</button>
+    </div>
+
+    <div class="banner">
+      <h3>Need Transport?<br>We are here to help!</h3>
+      <p>Gaon se Shehar tak... Har Safar Aasaan!</p>
+      <button class="banner-btn" id="btnBannerBook">Book Now</button>
+    </div>
+
+    <h3 class="section-title">All Services</h3>
+    <div class="grid-services">
+      <div class="service-card" data-goto="etaxiView">
+        <div class="icon-box">🛺</div>
+        <h4>E-Taxi</h4>
+        <p>Ride Now</p>
+      </div>
+      <div class="service-card" data-goto="etaxiView">
+        <div class="icon-box">🏍️</div>
+        <h4>Bike</h4>
+        <p>Quick Ride</p>
+      </div>
+      <div class="service-card" data-goto="etaxiView">
+        <div class="icon-box">🚗</div>
+        <h4>Car</h4>
+        <p>Comfort Ride</p>
+      </div>
+      <div class="service-card" data-goto="busView">
+        <div class="icon-box">🚌</div>
+        <h4>Bus / Tour</h4>
+        <p>Group Travel</p>
+      </div>
+      <div class="service-card" data-goto="truckView">
+        <div class="icon-box">🚚</div>
+        <h4>Truck / Goods</h4>
+        <p>Heavy & Light</p>
+      </div>
+      <div class="service-card" data-goto="postReqView">
+        <div class="icon-box">📦</div>
+        <h4>Post Req.</h4>
+        <p>Get Quotes</p>
+      </div>
+    </div>
+
+    <h3 class="section-title" style="margin-top: 10px;">Switch User View</h3>
+    <div style="display:flex; gap:8px; padding:0 16px;">
+      <button class="primary-btn" style="flex:1; margin:0;" id="btnGoDriver">Driver View</button>
+      <button class="primary-btn" style="flex:1; margin:0; background:#334155;" id="btnGoAdmin">Admin View</button>
+    </div>
+  </div>
+
+  <!-- E-TAXI SCREEN (WITH REAL LEAFLET MAP & EXACT ROAD ROUTE) -->
+  <div id="etaxiView" class="view">
+    <div class="subpage-nav">
+      <button class="icon-btn btn-back">←</button>
+      <h3>E-Taxi Booking</h3>
+    </div>
+
+    <!-- Real-time Interactive Street Map -->
+    <div id="liveMap"></div>
+
+    <div class="form-box">
+      <div class="input-group">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <label style="margin:0;">Pickup Location</label>
+          <button id="btnAutoGps" type="button" style="background:#ecfdf5; border:1px solid #10b981; color:#059669; font-size:11px; font-weight:bold; padding:3px 8px; border-radius:12px; cursor:pointer;">
+            📍 Use Current Location
+          </button>
+        </div>
+        <input id="etaxiPickup" placeholder="Fetching location or enter manually..." value="Belpahari Main Chowk">
+        <div id="gpsStatus" style="font-size:10px; color:#6b7280; margin-top:4px; display:none;"></div>
+      </div>
+      <div class="input-group">
+        <label>Drop Location (Real road route search)</label>
+        <input id="etaxiDrop" placeholder="Enter drop place (e.g. Jhargram, Silda, Ghatsila)">
+      </div>
+    </div>
+
+    <!-- Distance & Route Stats Bar -->
+    <div id="routeEstimateBar" style="margin: 0 16px 10px; padding: 10px 14px; background: white; border-radius: var(--radius-sm); border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+      <div>
+        <span style="color: var(--text-muted);">Real Distance:</span>
+        <strong id="displayDistance">0.0 km</strong>
+      </div>
+      <div>
+        <span style="color: var(--text-muted);">Est. Driving Time:</span>
+        <strong id="displayTime">~0 mins</strong>
+      </div>
+    </div>
+
+    <!-- Dynamic Vehicles -->
+    <div class="item-list">
+      <div class="item-card vehicle-option" id="cardOptionRickshaw" data-name="Mini / E-Rickshaw" data-base="30" data-perkm="10" style="border: 2px solid var(--primary);">
+        <div class="item-info">
+          <span class="item-avatar">🛺</span>
+          <div>
+            <div class="item-title">Mini / E-Rickshaw</div>
+            <div class="item-sub">Base ₹30 + ₹10/km • Eco Friendly</div>
+          </div>
+        </div>
+        <div class="item-fare"><strong id="fareDisplayRickshaw">₹30</strong></div>
+      </div>
+
+      <div class="item-card vehicle-option" id="cardOptionSedan" data-name="Sedan Car" data-base="60" data-perkm="15">
+        <div class="item-info">
+          <span class="item-avatar">🚗</span>
+          <div>
+            <div class="item-title">Sedan Car</div>
+            <div class="item-sub">Base ₹60 + ₹15/km • AC Comfort</div>
+          </div>
+        </div>
+        <div class="item-fare"><strong id="fareDisplaySedan">₹60</strong></div>
+      </div>
+    </div>
+
+    <button class="primary-btn" id="btnConfirmRide">Confirm & Book Ride</button>
+  </div>
+  <!-- BUS / TOUR SCREEN -->
+  <div id="busView" class="view">
+    <div class="subpage-nav">
+      <button class="icon-btn btn-back">←</button>
+      <h3>Bus / Tour</h3>
+    </div>
+
+    <div class="segmented-control">
+      <button class="active" id="btnLocalBus">Local Bus</button>
+      <button id="btnTourPkg">Tour Packages</button>
+    </div>
+
+    <div id="localBusList" class="item-list">
+      <div class="item-card">
+        <div class="item-info">
+          <span class="item-avatar">🚌</span>
+          <div>
+            <div class="item-title">Belpahari → Jhargram</div>
+            <div class="item-sub">1h 15m • Dep: 07:00 AM</div>
+          </div>
+        </div>
+        <div class="item-fare">
+          <strong>₹45</strong><br>
+          <button class="primary-btn btn-book-direct" style="margin:4px 0 0; padding:4px 10px; font-size:11px;" data-title="Bus: Belpahari to Jhargram" data-fare="45">Book</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="tourPkgList" class="item-list" style="display:none;">
+      <div class="item-card">
+        <div class="item-info">
+          <span class="item-avatar">🏞</span>
+          <div>
+            <div class="item-title">Weekend Tour Package</div>
+            <div class="item-sub">Belpahari - Dhangikusum • 2 Days</div>
+          </div>
+        </div>
+        <div class="item-fare">
+          <strong>₹1,800</strong><br>
+          <button class="primary-btn btn-book-direct" style="margin:4px 0 0; padding:4px 10px; font-size:11px;" data-title="Tour: Belpahari Circuit" data-fare="1800">Book</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRUCK / GOODS SCREEN -->
+  <div id="truckView" class="view">
+    <div class="subpage-nav">
+      <button class="icon-btn btn-back">←</button>
+      <h3>Goods Transport</h3>
+    </div>
+
+    <div class="item-list" style="margin-top:10px;">
+      <div class="item-card">
+        <div class="item-info">
+          <span class="item-avatar">🛻</span>
+          <div>
+            <div class="item-title">Mini Truck</div>
+            <div class="item-sub">Up to 1.5 Ton</div>
+          </div>
+        </div>
+        <div class="item-fare">
+          <strong>₹2,500</strong><br>
+          <button class="primary-btn btn-book-direct" style="margin:4px 0 0; padding:4px 10px; font-size:11px;" data-title="Mini Truck 1.5T" data-fare="2500">Book</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POST REQUIREMENT SCREEN -->
+  <div id="postReqView" class="view">
+    <div class="subpage-nav">
+      <button class="icon-btn btn-back">←</button>
+      <h3>Post Requirement</h3>
+    </div>
+
+    <div class="form-box">
+      <div class="input-group">
+        <label>From</label>
+        <input id="postFrom" value="Belpahari">
+      </div>
+      <div class="input-group">
+        <label>To</label>
+        <input id="postTo" placeholder="Enter destination">
+      </div>
+      <div class="input-group">
+        <label>Details</label>
+        <textarea id="postDesc" placeholder="Describe cargo weight or passenger count"></textarea>
+      </div>
+    </div>
+
+    <button class="primary-btn" id="btnSubmitReq">Post Requirement</button>
+  </div>
+
+  <!-- CUSTOMER TRIPS SCREEN -->
+  <div id="tripsView" class="view">
+    <div class="subpage-nav">
+      <h3>My Trips</h3>
+    </div>
+    <div class="item-list" id="customerTripsContainer" style="margin-top:14px;">
+      <div class="item-card">
+        <div class="item-info">
+          <span class="item-avatar">🛺</span>
+          <div>
+            <div class="item-title">Belpahari → Silda</div>
+            <div class="item-sub">E-Taxi • <span style="color:var(--primary); font-weight:bold;">Completed</span></div>
+          </div>
+        </div>
+        <div class="item-fare"><strong>₹120</strong></div>
+      </div>
+    </div>
+  </div>
+  <!-- DRIVER DASHBOARD -->
+  <div id="driverDashboardView" class="view">
+    <div class="app-header">
+      <div style="font-size:14px; font-weight:bold;">👨‍✈️ Driver: Rakesh Mahata</div>
+      <button class="icon-btn btn-back">✕</button>
+    </div>
+
+    <div style="margin:10px 16px; padding:12px 16px; background:white; border-radius:var(--radius-md); display:flex; justify-content:space-between; align-items:center; border:1px solid var(--border);">
+      <div>
+        <div style="font-size:13px; font-weight:bold;">Duty Status</div>
+        <div style="font-size:11px; color:var(--text-muted);" id="driverStatusSubtitle">Ready for customer requests</div>
+      </div>
+      <button id="btnDriverDutyToggle" style="border:none; background:#dcfce7; color:var(--primary); font-size:11px; font-weight:bold; padding:6px 14px; border-radius:20px; cursor:pointer;">● Online</button>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <small>Today's Completed</small>
+        <h2 id="driverCompletedTripsCount">0</h2>
+      </div>
+      <div class="stat-card">
+        <small>Driver Earnings</small>
+        <h2 id="driverLiveEarnings">₹0</h2>
+      </div>
+      <div class="stat-card">
+        <small>Available Rides</small>
+        <h2 id="driverLiveTripsCount">0</h2>
+      </div>
+      <div class="stat-card">
+        <small>Acceptance Rate</small>
+        <h2 id="driverAcceptRate">98%</h2>
+      </div>
+    </div>
+
+    <h3 class="section-title">Live Ride Requests & Active Trips</h3>
+    <div class="item-list" id="driverLiveQueue">
+      <p style="text-align:center; padding:15px; font-size:12px; color:var(--text-muted);">Waiting for new rides...</p>
+    </div>
+  </div>
+
+  <!-- ADMIN DASHBOARD -->
+  <div id="adminDashboardView" class="view">
+    <div class="app-header">
+      <div style="font-size:14px; font-weight:bold;">📊 GraminRoute Operations Hub</div>
+      <button class="icon-btn btn-back">✕</button>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <small>Total Bookings</small>
+        <h2 id="adminTotalBookings">0</h2>
+      </div>
+      <div class="stat-card">
+        <small>Gross Fare Total</small>
+        <h2 id="adminGrossFare">₹0</h2>
+      </div>
+      <div class="stat-card">
+        <small>Active Drivers</small>
+        <h2 id="adminActiveDrivers">18</h2>
+      </div>
+      <div class="stat-card">
+        <small>Custom Quotes</small>
+        <h2 id="adminPendingQuotes">0</h2>
+      </div>
+    </div>
+
+    <h3 class="section-title">Top Rural Corridors</h3>
+    <div class="item-list">
+      <div class="item-card">
+        <div class="item-info">
+          <span>🛺</span>
+          <div>
+            <div class="item-title">Belpahari ➔ Jhargram</div>
+            <div class="item-sub">Market & Medical trips</div>
+          </div>
+        </div>
+        <div class="item-fare"><strong>64%</strong></div>
+      </div>
+      <div class="item-card">
+        <div class="item-info">
+          <span>🏍️</span>
+          <div>
+            <div class="item-title">Belpahari ➔ Silda</div>
+            <div class="item-sub">Daily commuter route</div>
+          </div>
+        </div>
+        <div class="item-fare"><strong>28%</strong></div>
+      </div>
+    </div>
+
+    <h3 class="section-title" style="margin-top:14px;">Recent System Bookings</h3>
+    <div class="item-list" id="adminBookingsList">
+      <p style="text-align:center; padding:15px; font-size:12px; color:var(--text-muted);">Loading system data...</p>
+    </div>
+  </div>
+
+  <!-- PROFILE SCREEN -->
+  <div id="profileView" class="view">
+    <div class="subpage-nav">
+      <h3>Profile</h3>
+    </div>
+    <div style="padding:16px; background:white; margin:16px; border-radius:var(--radius-md); border:1px solid var(--border);">
+      <h4>Sujit Mahata</h4>
+      <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">+91 98765 43210</p>
+    </div>
+  </div>
+
+  <!-- FIXED BOTTOM NAVIGATION BAR -->
+  <div class="nav-bar">
+    <button class="nav-item active" id="tabHome">
+      <span>🏠</span>
+      Home
+    </button>
+    <button class="nav-item" id="tabTrips">
+      <span>📋</span>
+      Bookings
+    </button>
+    <button class="nav-item" id="tabProfile">
+      <span>👤</span>
+      Profile
+    </button>
+  </div>
+
+</div>
+
+<!-- LANGUAGE MODAL -->
+<div id="langModal" class="modal-backdrop">
+  <div class="modal-body">
+    <h3>Choose Language</h3>
+    <div class="lang-item" data-lang="English">
+      <span>English</span>
+      <span>✔</span>
+    </div>
+    <div class="lang-item" data-lang="हिन्दी (Hindi)">
+      <span>हिन्दी</span>
+    </div>
+    <div class="lang-item" data-lang="বাংলা (Bengali)">
+      <span>বাংলা</span>
+    </div>
+    <button class="primary-btn" id="btnCloseLang">Continue</button>
+  </div>
+</div>
+<script>
+  // @ts-nocheck
+  const firebaseConfig = {
+    apiKey: "AIzaSyB1bgcUZq1kcosSV3h2dMQXRSS84eBUsaE",
+    authDomain: "graminroute.firebaseapp.com",
+    projectId: "graminroute",
+    storageBucket: "graminroute.firebasestorage.app",
+    messagingSenderId: "833483414541",
+    appId: "1:833483414541:web:12f8b2b793e3ee33254944"
+  };
+
+  let db = null;
+  try {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+  } catch (err) {
+    console.warn("Running in local demo mode.");
+  }
+
+  let selectedVehicle = "Mini / E-Rickshaw";
+  let selectedFare = 30;
+  let calculatedDistanceKm = 0.0;
+  let isDriverOnline = true;
+
+  let lastBookingCount = null;
+
+  // Web Audio 2-Tone Dispatch Chime
+  function playDispatchAlert() {
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      const ctx = new AudioContext();
+
+      // First tone (high chime)
+      const osc1 = ctx.createOscillator();
+      const gain1 = ctx.createGain();
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(880, ctx.currentTime);
+      gain1.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain1.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+      osc1.connect(gain1);
+      gain1.connect(ctx.destination);
+      osc1.start(ctx.currentTime);
+      osc1.stop(ctx.currentTime + 0.35);
+
+      // Second tone (higher confirmation chime)
+      const osc2 = ctx.createOscillator();
+      const gain2 = ctx.createGain();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(1174.66, ctx.currentTime + 0.18);
+      gain2.gain.setValueAtTime(0.25, ctx.currentTime + 0.18);
+      gain2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+      osc2.connect(gain2);
+      gain2.connect(ctx.destination);
+      osc2.start(ctx.currentTime + 0.18);
+      osc2.stop(ctx.currentTime + 0.6);
+
+      // Mobile device vibration pulse
+      if (navigator.vibrate) {
+        navigator.vibrate([200, 100, 300]);
+      }
+    } catch (e) {
+      console.warn("Audio chime prevented:", e);
+    }
+  }
+
+  // Real Leaflet Map Elements
+  // let map = null;;
+
+
+  // Real Leaflet Map Elements
+ // let map = null;;
+  let pickupMarker = null;
+  let dropMarker = null;
+  let routePolyline = null;
+  let pickupCoords = [22.6373, 86.7628]; // Default Belpahari [lat, lon]
+
+  function initMap() {
+    if (!map && document.getElementById('liveMap')) {
+      map = L.map('liveMap', { zoomControl: false }).setView(pickupCoords, 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+      }).addTo(map);
+
+      pickupMarker = L.marker(pickupCoords).addTo(map).bindPopup("Pickup: Belpahari").openPopup();
+    }
+  }
+
+  // Real Road Routing Engine (OSRM Driving API)
+  async function calculateRealRoadRoute(startLat, startLon, destLat, destLon) {
+    const url = `https://router.project-osrm.org/route/v1/driving/${startLon},${startLat};${destLon},${destLat}?overview=full&geometries=geojson`;
+
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (data.routes && data.routes.length > 0) {
+        const route = data.routes[0];
+        const distKm = route.distance / 1000;
+        const durMins = Math.round(route.duration / 60);
+
+        if (routePolyline && map) map.removeLayer(routePolyline);
+        const latLngs = route.geometry.coordinates.map(function(c) {
+          return [c[1], c[0]];
+        });
+
+        if (map) {
+          routePolyline = L.polyline(latLngs, { color: '#059669', weight: 5 }).addTo(map);
+          map.fitBounds(routePolyline.getBounds(), { padding: [25, 25] });
+        }
+
+        updateFares(distKm);
+        const timeElem = document.getElementById('displayTime');
+        if (timeElem) timeElem.innerText = `~${durMins} mins`;
+      }
+    } catch (err) {
+      console.warn("OSRM Routing error:", err);
+    }
+  }
+
+  function updateFares(distanceKm) {
+    calculatedDistanceKm = distanceKm;
+    const rickshawFare = Math.max(30, Math.round(30 + (distanceKm * 10)));
+    const sedanFare = Math.max(60, Math.round(60 + (distanceKm * 15)));
+    const estMinutes = Math.max(5, Math.round((distanceKm / 30) * 60));
+
+    const distElem = document.getElementById('displayDistance');
+    const timeElem = document.getElementById('displayTime');
+    const rickshawElem = document.getElementById('fareDisplayRickshaw');
+    const sedanElem = document.getElementById('fareDisplaySedan');
+
+    if (distElem) distElem.innerText = distanceKm.toFixed(1) + ' km';
+    if (timeElem && !timeElem.innerText.includes('mins')) timeElem.innerText = '~' + estMinutes + ' mins';
+    if (rickshawElem) rickshawElem.innerText = '₹' + rickshawFare;
+    if (sedanElem) sedanElem.innerText = '₹' + sedanFare;
+
+    if (selectedVehicle === "Mini / E-Rickshaw") {
+      selectedFare = rickshawFare;
+    } else {
+      selectedFare = sedanFare;
+    }
+  }
+
+  function showView(viewId) {
+    const views = document.querySelectorAll('.view');
+    views.forEach(function(v) {
+      v.classList.remove('active');
+      v.style.display = 'none';
+    });
+
+    const target = document.getElementById(viewId);
+    if (target) {
+      target.classList.add('active');
+      target.style.display = 'flex';
+      const screen = document.querySelector('.app-screen');
+      if (screen) screen.scrollTop = 0;
+    }
+
+    if (viewId === 'etaxiView') {
+      setTimeout(function() {
+        initMap();
+        if (map) map.invalidateSize();
+      }, 250);
+    }
+  }
+
+  function activateTab(tabId) {
+    document.querySelectorAll('.nav-item').forEach(function(btn) {
+      btn.classList.remove('active');
+    });
+    const activeBtn = document.getElementById(tabId);
+    if (activeBtn) activeBtn.classList.add('active');
+  }
+
+  function renderTripUI(route, type, fare, status) {
+    var box = document.getElementById('customerTripsContainer');
+    if (!box) return;
+    var div = document.createElement('div');
+    div.className = 'item-card';
+    div.innerHTML = '<div class="item-info"><span class="item-avatar">🛺</span><div><div class="item-title">' + route + '</div><div class="item-sub">' + type + ' • ' + status + '</div></div></div><div class="item-fare"><strong>₹' + fare + '</strong></div>';
+    box.appendChild(div);
+  }
+
+  window.acceptTrip = async function(docId) {
+    if (!db) {
+      alert("Demo mode: Trip accepted!");
+      return;
+    }
+    try {
+      await db.collection("bookings").doc(docId).update({
+        status: "In Progress"
+      });
+      alert("Trip accepted! Head to customer pickup location.");
+    } catch (e) {
+      alert("Error: " + e.message);
+    }
+  };
+
+  window.completeTrip = async function(docId, fare) {
+    if (!db) {
+      alert("Demo mode: Trip completed!");
+      return;
+    }
+    try {
+      await db.collection("bookings").doc(docId).update({
+        status: "Completed"
+      });
+      alert("Trip completed! Collect ₹" + fare + " cash from customer.");
+    } catch (e) {
+      alert("Error: " + e.message);
+    }
+  };
+  document.addEventListener('DOMContentLoaded', function() {
+    var tabHome = document.getElementById('tabHome');
+    var tabTrips = document.getElementById('tabTrips');
+    var tabProfile = document.getElementById('tabProfile');
+
+    if (tabHome) {
+      tabHome.addEventListener('click', function() {
+        activateTab('tabHome');
+        showView('homeView');
+      });
+    }
+
+    if (tabTrips) {
+      tabTrips.addEventListener('click', function() {
+        activateTab('tabTrips');
+        showView('tripsView');
+      });
+    }
+
+    if (tabProfile) {
+      tabProfile.addEventListener('click', function() {
+        activateTab('tabProfile');
+        showView('profileView');
+      });
+    }
+
+    document.querySelectorAll('.service-card').forEach(function(card) {
+      card.addEventListener('click', function() {
+        var dest = card.getAttribute('data-goto');
+        if (dest) showView(dest);
+      });
+    });
+
+    var btnBanner = document.getElementById('btnBannerBook');
+    if (btnBanner) {
+      btnBanner.addEventListener('click', function() {
+        showView('etaxiView');
+      });
+    }
+
+    var btnDriver = document.getElementById('btnGoDriver');
+    if (btnDriver) {
+      btnDriver.addEventListener('click', function() {
+        showView('driverDashboardView');
+      });
+    }
+
+    var btnAdmin = document.getElementById('btnGoAdmin');
+    if (btnAdmin) {
+      btnAdmin.addEventListener('click', function() {
+        showView('adminDashboardView');
+      });
+    }
+
+    // Auto-GPS Current Satellite Location
+    var btnAutoGps = document.getElementById('btnAutoGps');
+    var inputPickup = document.getElementById('etaxiPickup');
+    var gpsStatus = document.getElementById('gpsStatus');
+
+    if (btnAutoGps) {
+      btnAutoGps.addEventListener('click', function() {
+        if (!navigator.geolocation) {
+          alert('Geolocation not supported by device.');
+          return;
+        }
+
+        btnAutoGps.innerText = '⌛ Locating...';
+        btnAutoGps.disabled = true;
+        if (gpsStatus) {
+          gpsStatus.style.display = 'block';
+          gpsStatus.style.color = '#059669';
+          gpsStatus.innerText = 'Connecting to GPS satellites...';
+        }
+
+        navigator.geolocation.getCurrentPosition(
+          async function(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+            pickupCoords = [lat, lon];
+
+            if (map) {
+              map.setView(pickupCoords, 14);
+              if (pickupMarker) map.removeLayer(pickupMarker);
+              pickupMarker = L.marker(pickupCoords).addTo(map).bindPopup("Current Location").openPopup();
+            }
+
+            try {
+              var res = await fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon);
+              var data = await res.json();
+                            var addr = data.address || {};
+              // Priority: 1. Gaon/Hamlet -> 2. Road/Locality -> 3. Gram Panchayat/Block
+              var villageOrPlace = addr.hamlet || addr.village || addr.isolated_dwelling || addr.suburb || addr.neighbourhood || addr.residential || '';
+              var roadOrArea = addr.road || addr.locality || '';
+              var blockOrTown = addr.town || addr.city || addr.subdistrict || addr.county || '';
+
+              var addressParts = [];
+              if (villageOrPlace) addressParts.push(villageOrPlace);
+              if (roadOrArea && roadOrArea !== villageOrPlace) addressParts.push(roadOrArea);
+              if (blockOrTown && blockOrTown !== villageOrPlace) addressParts.push(blockOrTown);
+
+              var fullAddr = addressParts.join(', ');
+
+              // Agar gaon ka exact name mil jaye toh display karein
+              inputPickup.value = fullAddr.trim() ? fullAddr : (data.display_name ? data.display_name.split(',')[0] : 'Lat: ' + lat.toFixed(4) + ', Lon: ' + lon.toFixed(4));
+
+
+              inputPickup.value = fullAddr.trim() ? fullAddr : ('Lat: ' + lat.toFixed(4) + ', Lon: ' + lon.toFixed(4));
+              if (gpsStatus) gpsStatus.innerText = '✔ Location set accurately.';
+            } catch (err) {
+              inputPickup.value = 'GPS: ' + lat.toFixed(5) + ', ' + lon.toFixed(5);
+              if (gpsStatus) gpsStatus.innerText = '✔ Coordinates applied.';
+            }
+
+            btnAutoGps.innerText = '📍 Use Current Location';
+            btnAutoGps.disabled = false;
+          },
+          function(error) {
+            btnAutoGps.innerText = '📍 Use Current Location';
+            btnAutoGps.disabled = false;
+            alert('Location permission denied or GPS unavailable.');
+            if (gpsStatus) {
+              gpsStatus.style.color = '#dc2626';
+              gpsStatus.innerText = '❌ Turn ON GPS & Allow permission.';
+            }
+          },
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+      });
+    }
+
+    // Live Geocoding & Driving Road Routing on Drop Search
+    var dropSearchTimeout = null;
+    var dropInput = document.getElementById('etaxiDrop');
+
+    if (dropInput) {
+      dropInput.addEventListener('input', function() {
+        clearTimeout(dropSearchTimeout);
+        var q = this.value.trim();
+        if (q.length < 3) return;
+
+        dropSearchTimeout = setTimeout(async function() {
+          try {
+            var res = await fetch('https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=in&q=' + encodeURIComponent(q + ', Jhargram, West Bengal'));
+
+            var results = await res.json();
+
+            if (results && results.length > 0) {
+              var destLat = parseFloat(results[0].lat);
+              var destLon = parseFloat(results[0].lon);
+
+              if (map) {
+                if (dropMarker) map.removeLayer(dropMarker);
+                dropMarker = L.marker([destLat, destLon]).addTo(map).bindPopup("Drop: " + results[0].display_name.split(',')[0]).openPopup();
+              }
+
+              calculateRealRoadRoute(pickupCoords[0], pickupCoords[1], destLat, destLon);
+            }
+          } catch (e) {
+            console.warn("Place search error:", e);
+          }
+        }, 700);
+      });
+    }
+
+    // Vehicle Option Tap
+    document.querySelectorAll('.vehicle-option').forEach(function(opt) {
+      opt.addEventListener('click', function() {
+        document.querySelectorAll('.vehicle-option').forEach(function(o) {
+          o.style.border = '1px solid var(--border)';
+        });
+        opt.style.border = '2px solid var(--primary)';
+        selectedVehicle = opt.getAttribute('data-name') || "Mini / E-Rickshaw";
+
+        var base = Number(opt.getAttribute('data-base')) || 30;
+        var perKm = Number(opt.getAttribute('data-perkm')) || 10;
+        selectedFare = Math.max(base, Math.round(base + (calculatedDistanceKm * perKm)));
+      });
+    });
+
+    // Driver Online/Offline
+    var btnDuty = document.getElementById('btnDriverDutyToggle');
+    var dutySub = document.getElementById('driverStatusSubtitle');
+    if (btnDuty) {
+      btnDuty.addEventListener('click', function() {
+        isDriverOnline = !isDriverOnline;
+        if (isDriverOnline) {
+          btnDuty.innerText = '● Online';
+          btnDuty.style.background = '#dcfce7';
+          btnDuty.style.color = '#059669';
+          if (dutySub) dutySub.innerText = 'Ready for customer requests';
+        } else {
+          btnDuty.innerText = '○ Offline';
+          btnDuty.style.background = '#fee2e2';
+          btnDuty.style.color = '#dc2626';
+          if (dutySub) dutySub.innerText = 'Not receiving new ride requests';
+        }
+      });
+    }
+
+    var btnLocalBus = document.getElementById('btnLocalBus');
+    var btnTourPkg = document.getElementById('btnTourPkg');
+    var localList = document.getElementById('localBusList');
+    var tourList = document.getElementById('tourPkgList');
+
+    if (btnLocalBus && btnTourPkg) {
+      btnLocalBus.addEventListener('click', function() {
+        btnLocalBus.classList.add('active');
+        btnTourPkg.classList.remove('active');
+        if (localList) localList.style.display = 'flex';
+        if (tourList) tourList.style.display = 'none';
+      });
+
+      btnTourPkg.addEventListener('click', function() {
+        btnTourPkg.classList.add('active');
+        btnLocalBus.classList.remove('active');
+        if (localList) localList.style.display = 'none';
+        if (tourList) tourList.style.display = 'flex';
+      });
+    }
+
+    document.querySelectorAll('.btn-back').forEach(function(b) {
+      b.addEventListener('click', function() {
+        activateTab('tabHome');
+        showView('homeView');
+      });
+    });
+
+    var langModal = document.getElementById('langModal');
+    var btnOpenLang = document.getElementById('btnOpenLang');
+    var btnCloseLang = document.getElementById('btnCloseLang');
+
+    if (btnOpenLang && langModal) {
+      btnOpenLang.addEventListener('click', function() {
+        langModal.classList.add('show');
+      });
+    }
+
+    if (btnCloseLang && langModal) {
+      btnCloseLang.addEventListener('click', function() {
+        langModal.classList.remove('show');
+      });
+    }
+
+    var btnConfirmRide = document.getElementById('btnConfirmRide');
+    if (btnConfirmRide) {
+      btnConfirmRide.addEventListener('click', async function() {
+        var pickup = document.getElementById('etaxiPickup').value || 'Belpahari';
+        var drop = document.getElementById('etaxiDrop').value;
+
+        if (!drop) {
+          alert('Please enter a destination.');
+          return;
+        }
+
+        var route = pickup + ' → ' + drop;
+        if (db) {
+          try {
+            await db.collection('bookings').add({
+              route: route,
+              vehicle: selectedVehicle,
+              fare: selectedFare,
+              status: 'Requested',
+              distance: calculatedDistanceKm.toFixed(1) + ' km',
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert('Ride requested! Exact Fare: ₹' + selectedFare);
+          } catch (e) {
+            alert('Booking failed: ' + e.message);
+          }
+        } else {
+          renderTripUI(route, selectedVehicle, selectedFare, 'Requested');
+          alert('Ride request saved locally!');
+        }
+
+        activateTab('tabTrips');
+        showView('tripsView');
+      });
+    }
+
+    var btnBookDirectList = document.querySelectorAll('.btn-book-direct');
+    btnBookDirectList.forEach(function(b) {
+      b.addEventListener('click', async function() {
+        var title = b.getAttribute('data-title') || 'Trip';
+        var fare = parseInt(b.getAttribute('data-fare') || '50', 10);
+
+        if (db) {
+          try {
+            await db.collection('bookings').add({
+              route: title,
+              vehicle: title,
+              fare: fare,
+              status: 'Confirmed',
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert('Booking confirmed!');
+          } catch (e) {
+            alert('Booking failed: ' + e.message);
+          }
+        } else {
+          renderTripUI(title, 'Direct Booking', fare, 'Confirmed');
+          alert('Booking confirmed locally!');
+        }
+
+        activateTab('tabTrips');
+        showView('tripsView');
+      });
+    });
+
+    var btnSubmitReq = document.getElementById('btnSubmitReq');
+    if (btnSubmitReq) {
+      btnSubmitReq.addEventListener('click', async function() {
+        var f = document.getElementById('postFrom').value;
+        var t = document.getElementById('postTo').value;
+        var d = document.getElementById('postDesc').value;
+
+        if (!t) {
+          alert('Please fill in destination.');
+          return;
+        }
+
+        var route = f + ' → ' + t;
+        if (db) {
+          try {
+            await db.collection('bookings').add({
+              route: route,
+              vehicle: 'Custom Cargo/Group',
+              fare: 0,
+              desc: d,
+              status: 'Pending Quote',
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert('Requirement posted!');
+          } catch (e) {
+            alert('Error: ' + e.message);
+          }
+        } else {
+          renderTripUI(route, 'Requirement', 0, 'Pending Quote');
+          alert('Requirement saved locally!');
+        }
+
+        activateTab('tabTrips');
+        showView('tripsView');
+      });
+    }
+
+    if (db) {
+      db.collection('bookings')
+        .orderBy('createdAt', 'desc')
+        .limit(30)
+        .onSnapshot(function(snapshot) {
+          var tripsContainer = document.getElementById('customerTripsContainer');
+          var driverQueue = document.getElementById('driverLiveQueue');
+          var driverCount = document.getElementById('driverLiveTripsCount');
+          var driverEarnings = document.getElementById('driverLiveEarnings');
+          var driverCompleted = document.getElementById('driverCompletedTripsCount');
+          
+          var adminBookingsList = document.getElementById('adminBookingsList');
+          var adminTotalBookings = document.getElementById('adminTotalBookings');
+          var adminGrossFare = document.getElementById('adminGrossFare');
+          var adminPendingQuotes = document.getElementById('adminPendingQuotes');
+
+          if (tripsContainer) tripsContainer.innerHTML = '';
+          if (driverQueue) driverQueue.innerHTML = '';
+          if (adminBookingsList) adminBookingsList.innerHTML = '';
+          // Play sound if a new booking arrived and driver is online
+          if (lastBookingCount !== null && snapshot.docs.length > lastBookingCount && isDriverOnline) {
+            playDispatchAlert();
+          }
+          lastBookingCount = snapshot.docs.length;
+
+          var availableCount = 0;
+          var driverEarnTotal = 0;
+          var completedCount = 0;
+          var totalBookings = 0;
+          var grossFareSum = 0;
+          var pendingQuotesCount = 0;
+
+          snapshot.forEach(function(doc) {
+            var data = doc.data();
+            var route = data.route || 'Local Route';
+            var fare = Number(data.fare) || 0;
+            var status = data.status || 'Requested';
+
+            totalBookings++;
+            grossFareSum += fare;
+
+            if (status === 'Pending Quote') {
+              pendingQuotesCount++;
+            }
+
+            if (status === 'Completed') {
+              completedCount++;
+              driverEarnTotal += fare;
+            }
+
+            if (tripsContainer) {
+              renderTripUI(route, data.vehicle || data.desc || 'Trip', fare, status);
+            }
+
+            if (driverQueue && (status === 'Requested' || status === 'In Progress')) {
+              availableCount++;
+              var card = document.createElement('div');
+              card.className = 'item-card';
+
+              var info = document.createElement('div');
+              info.className = 'item-info';
+              info.innerHTML = '<span class="item-avatar">' + (status === 'In Progress' ? '🚖' : '🛺') + '</span>' +
+                '<div>' +
+                  '<div class="item-title">' + route + '</div>' +
+                  '<div class="item-sub">' + (data.vehicle || 'Ride') + ' • ₹' + fare + ' • <strong style="color:' + (status === 'In Progress' ? '#059669' : '#d97706') + '">' + status + '</strong></div>' +
+                '</div>';
+
+              var actionBtn = document.createElement('button');
+              actionBtn.className = 'primary-btn';
+              actionBtn.style.cssText = 'margin:0; padding:6px 12px; font-size:11px; white-space:nowrap;';
+
+              if (status === 'Requested') {
+                actionBtn.innerText = 'Accept';
+                actionBtn.onclick = function() {
+                  acceptTrip(doc.id);
+                };
+              } else if (status === 'In Progress') {
+                actionBtn.innerText = 'Collect ₹' + fare;
+                actionBtn.style.background = '#059669';
+                actionBtn.onclick = function() {
+                  completeTrip(doc.id, fare);
+                };
+              }
+
+              card.appendChild(info);
+              card.appendChild(actionBtn);
+              driverQueue.appendChild(card);
+            }
+
+            if (adminBookingsList) {
+              var adminCard = document.createElement('div');
+              adminCard.className = 'item-card';
+              adminCard.innerHTML = '<div class="item-info"><span class="item-avatar">📌</span><div><div class="item-title">' + route + '</div><div class="item-sub">' + (data.vehicle || 'Trip') + ' • ' + status + '</div></div></div><div class="item-fare"><strong>₹' + fare + '</strong></div>';
+              adminBookingsList.appendChild(adminCard);
+            }
+          });
+
+          if (driverCount) driverCount.innerText = availableCount.toString();
+          if (driverEarnings) driverEarnings.innerText = '₹' + driverEarnTotal.toLocaleString('en-IN');
+          if (driverCompleted) driverCompleted.innerText = completedCount.toString();
+
+          if (adminTotalBookings) adminTotalBookings.innerText = totalBookings.toString();
+          if (adminGrossFare) adminGrossFare.innerText = '₹' + grossFareSum.toLocaleString('en-IN');
+          if (adminPendingQuotes) adminPendingQuotes.innerText = pendingQuotesCount.toString();
+        }, function(error) {
+          console.error("Firestore sync error:", error);
+        });
+    }
+  });
+</script>
+</body>
+</html>
