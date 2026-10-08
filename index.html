@@ -491,6 +491,100 @@
       flex-direction: column;
       gap: 12px;
     }
+        /* Dynamic Bottom Nav with Center FAB */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background: #ffffff;
+      border-top: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+      z-index: 1000;
+    }
+
+    .bottom-nav .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: #64748b;
+      font-size: 11px;
+      font-weight: 600;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .bottom-nav .nav-item.active {
+      color: #059669;
+    }
+
+    /* Animated Dynamic Top Border Indicator */
+    .bottom-nav .nav-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0);
+      width: 24px;
+      height: 3px;
+      background: #059669;
+      border-radius: 0 0 4px 4px;
+      transition: transform 0.3s ease;
+    }
+
+    .bottom-nav .nav-item.active::before {
+      transform: translateX(-50%) scaleX(1);
+    }
+
+    /* Center Floating Action Button (FAB) */
+    .fab-wrapper {
+      position: relative;
+      top: -18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      text-decoration: none;
+      z-index: 1001;
+    }
+
+    .fab-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 18px rgba(5, 150, 105, 0.42), 0 0 0 5px #ffffff;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .fab-btn:active {
+      transform: scale(0.9);
+      box-shadow: 0 4px 10px rgba(5, 150, 105, 0.3), 0 0 0 4px #ffffff;
+    }
+
+    .fab-btn span {
+      font-size: 24px;
+      color: #ffffff;
+    }
+
+    .fab-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #047857;
+      margin-top: 4px;
+    }
+
   </style>
 </head>
 <body>
@@ -642,10 +736,16 @@
 
     <button class="primary-btn" id="btnConfirmRide">Confirm & Request Driver</button>
   </div>
-    <div id="busView" class="view">
+      <!-- LONG TOUR BUS SCREEN -->
+  <div id="busView" class="view">
     <div class="subpage-nav">
       <button class="icon-btn btn-back">←</button>
       <h3>Long Tour & Bus Booking</h3>
+    </div>
+
+    <!-- Bus Route Visual Map -->
+    <div id="busMapContainer" style="margin: 8px 16px 12px 16px; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+      <div id="busMap" style="height: 190px; width: 100%; z-index: 1;"></div>
     </div>
 
     <!-- Long Tour Notice -->
@@ -719,36 +819,29 @@
     </div>
   </div>
 
-
-    <div id="tourPkgList" class="item-list" style="display:none;">
-      <div class="item-card">
-        <div class="item-info">
-          <span class="item-avatar">🛍️</span>
-          <div>
-            <div class="item-title">Silda Haat Special Return Shuttle</div>
-            <div class="item-sub">Monday & Friday Haat Day • Morning Return</div>
-          </div>
-        </div>
-        <div class="item-fare">
-          <strong>₹50</strong><br>
-          <button class="primary-btn btn-book-direct" style="margin:4px 0 0; padding:4px 10px; font-size:11px;" data-title="Haat Shuttle: Silda" data-fare="50">Book Seat</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- TRUCK & GOODS CARGO SCREEN -->
+  <!-- TRUCK & GOODS CARGO SCREEN -->
   <div id="truckView" class="view">
     <div class="subpage-nav">
       <button class="icon-btn btn-back">←</button>
       <h3>Maal Dhulai & Goods Truck</h3>
     </div>
 
+        <!-- Truck Cargo Visual Map with Dynamic Calculator -->
+    <div id="truckMapContainer" style="margin: 8px 16px 12px 16px; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow-sm); position: relative;">
+      <div id="truckMap" style="height: 190px; width: 100%; z-index: 1;"></div>
+      <div id="truckFareBadge" style="position: absolute; bottom: 8px; left: 8px; right: 8px; z-index: 1000; background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(4px); color: #fff; border-radius: 8px; padding: 6px 10px; font-size: 11px; display: flex; justify-content: space-between; align-items: center;">
+        <span>📍 Pin khiska kar gaon chunein</span>
+        <strong id="liveFareText" style="color: #34d399;">₹600 Base</strong>
+      </div>
+    </div>
+
+
+    <!-- Goods Notice -->
     <div style="background:#fef3c7; border:1px solid #fde68a; margin:10px 16px; padding:10px 14px; border-radius:var(--radius-sm); font-size:11px; color:#92400e;">
       🚚 <strong>Kisan & Dukandar Special:</strong> Sabzi, Dhaan, Baans, Building Material ya Haat ka saaman transport karne ke liye gaadi book karein.
     </div>
 
     <div class="item-list">
-
       <!-- Vehicle 1: Chhota Hathi / Tata Ace -->
       <div class="item-card" style="flex-direction: column; align-items: stretch; gap: 8px;">
         <div style="display:flex; justify-content:space-between; align-items:flex-start;">
@@ -806,12 +899,14 @@
             <div style="font-size:10px; color:var(--text-muted);">Kisan Rate</div>
           </div>
         </div>
-                <div style="display:flex; gap:8px; margin-top:4px;">
+        <div style="display:flex; gap:8px; margin-top:4px;">
           <a href="tel:+917601907868" class="primary-btn" style="flex:1; margin:0; text-align:center; padding:7px; font-size:11px; background:#1e293b; text-decoration:none; color:white; border-radius:12px;">📞 Call Driver</a>
           <a href="https://wa.me/917601907868?text=Namaste,%20mujhe%20kheti%20saaman%20ke%20liye%20Tractor%20Trolley%20chahiye." target="_blank" class="primary-btn" style="flex:1; margin:0; text-align:center; padding:7px; font-size:11px; background:#25D366; text-decoration:none; color:white; border-radius:12px;">💬 WhatsApp</a>
         </div>
       </div>
+    </div>
   </div>
+
 
 
 
@@ -934,20 +1029,40 @@
   </div>
 
   <!-- BOTTOM NAVIGATION -->
-  <div class="nav-bar">
-    <button class="nav-item active" id="tabHome">
-      <span>🏠</span>
-      Home
-    </button>
-    <button class="nav-item" id="tabTrips">
-      <span>📋</span>
-      Bookings
-    </button>
-    <button class="nav-item" id="tabProfile">
-      <span>👤</span>
-      Profile
-    </button>
+    <div class="bottom-nav">
+    <!-- Home Tab -->
+    <div class="nav-item active" data-tab="homeView">
+      <span style="font-size: 20px;">🏠</span>
+      <span>Home</span>
+    </div>
+
+    <!-- Bookings Tab -->
+    <div class="nav-item" data-tab="bookingsView">
+      <span style="font-size: 20px;">📋</span>
+      <span>Bookings</span>
+    </div>
+
+    <!-- Center Floating Action Button (FAB) -->
+    <div class="fab-wrapper" id="btnQuickBook" onclick="alert('⚡ Quick Booking: Apni gaadi ya tour select karein!')">
+      <div class="fab-btn">
+        <span>⚡</span>
+      </div>
+      <span class="fab-label">Book</span>
+    </div>
+
+    <!-- Post Requirement Tab -->
+    <div class="nav-item" data-tab="postReqView">
+      <span style="font-size: 20px;">📦</span>
+      <span>Post</span>
+    </div>
+
+    <!-- Profile Tab -->
+    <div class="nav-item" data-tab="profileView">
+      <span style="font-size: 20px;">👤</span>
+      <span>Profile</span>
+    </div>
   </div>
+
 
 </div>
 
@@ -1459,6 +1574,182 @@
         });
     }
   });
+          // ==========================================
+    // DYNAMIC MAPS: BUS TOURS & TRUCK DISPATCH
+    // ==========================================
+    var busMapInstance = null;
+    var truckMapInstance = null;
+    var busPolyline = null;
+    var busMovingMarker = null;
+    var busAnimInterval = null;
+
+    var truckPickupMarker = null;
+    var truckPolyline = null;
+    var mandiCoords = [22.6366, 86.7628]; // Belpahari Hub
+
+    var tourRoutes = {
+      digha: {
+        name: "Belpahari to Digha",
+        coords: [[22.6366, 86.7628], [22.4539, 86.9926], [22.3, 87.2], [21.93, 87.35], [21.6266, 87.5074]]
+      },
+      puri: {
+        name: "Belpahari to Puri Dham",
+        coords: [[22.6366, 86.7628], [22.2, 86.9], [21.9, 86.7], [20.8, 86.2], [20.2961, 85.8245], [19.8135, 85.8312]]
+      }
+    };
+
+    function initBusMap() {
+      setTimeout(function() {
+        var el = document.getElementById('busMap');
+        if (!el) return;
+
+        if (!busMapInstance) {
+          busMapInstance = L.map('busMap', { zoomControl: false }).setView([22.1, 87.1], 8);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+          }).addTo(busMapInstance);
+
+          selectBusTour('digha');
+        } else {
+          busMapInstance.invalidateSize();
+        }
+      }, 300);
+    }
+
+    function selectBusTour(type) {
+      if (!busMapInstance) return;
+      var routeData = tourRoutes[type] || tourRoutes['digha'];
+
+      if (busPolyline) busMapInstance.removeLayer(busPolyline);
+      if (busMovingMarker) busMapInstance.removeLayer(busMovingMarker);
+      if (busAnimInterval) clearInterval(busAnimInterval);
+
+      busPolyline = L.polyline(routeData.coords, {
+        color: '#059669',
+        weight: 4,
+        opacity: 0.85,
+        dashArray: '6, 8'
+      }).addTo(busMapInstance);
+
+      L.marker(routeData.coords[0]).addTo(busMapInstance).bindPopup("<b>Belpahari Hub</b>").openPopup();
+      var dest = routeData.coords[routeData.coords.length - 1];
+      L.marker(dest).addTo(busMapInstance).bindPopup("<b>" + routeData.name + "</b>");
+
+      busMapInstance.fitBounds(busPolyline.getBounds(), { padding: [20, 20] });
+
+      var busIcon = L.divIcon({
+        className: 'bus-moving-icon',
+        html: '<div style="font-size:18px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));">🚌</div>',
+        iconSize: [20, 20],
+        iconAnchor: [10, 10]
+      });
+
+      var step = 0;
+      busMovingMarker = L.marker(routeData.coords[0], { icon: busIcon }).addTo(busMapInstance);
+
+      busAnimInterval = setInterval(function() {
+        step = (step + 1) % routeData.coords.length;
+        busMovingMarker.setLatLng(routeData.coords[step]);
+      }, 2200);
+    }
+
+    function initTruckMap() {
+      setTimeout(function() {
+        var el = document.getElementById('truckMap');
+        if (!el) return;
+
+        if (!truckMapInstance) {
+          truckMapInstance = L.map('truckMap', { zoomControl: false }).setView(mandiCoords, 12);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+          }).addTo(truckMapInstance);
+
+          L.marker(mandiCoords).addTo(truckMapInstance).bindPopup("<b>Belpahari Mandi / Hub</b>");
+
+          var initialPickup = [22.6650, 86.7900];
+          truckPickupMarker = L.marker(initialPickup, { draggable: true }).addTo(truckMapInstance);
+          truckPickupMarker.bindPopup("<b>Pickup Point</b><br>Ise khet ya dukan par drag karein").openPopup();
+
+          truckPolyline = L.polyline([mandiCoords, initialPickup], { color: '#d97706', weight: 3, dashArray: '4, 6' }).addTo(truckMapInstance);
+
+          updateLiveTruckFare(initialPickup);
+
+          truckPickupMarker.on('drag', function(e) {
+            var pos = e.target.getLatLng();
+            truckPolyline.setLatLngs([mandiCoords, [pos.lat, pos.lng]]);
+            updateLiveTruckFare([pos.lat, pos.lng]);
+          });
+
+          truckPickupMarker.on('dragend', function(e) {
+            var pos = e.target.getLatLng();
+            truckPickupMarker.bindPopup("<b>Gaon Pickup</b><br>Doori: " + calculateDistance(mandiCoords[0], mandiCoords[1], pos.lat, pos.lng).toFixed(1) + " km").openPopup();
+          });
+        } else {
+          truckMapInstance.invalidateSize();
+        }
+      }, 300);
+    }
+
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+      var R = 6371;
+      var dLat = (lat2 - lat1) * Math.PI / 180;
+      var dLon = (lon2 - lon1) * Math.PI / 180;
+      var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    }
+
+    function updateLiveTruckFare(coords) {
+      var dist = calculateDistance(mandiCoords[0], mandiCoords[1], coords[0], coords[1]);
+      var km = Math.max(1, dist.toFixed(1));
+      var tataAceFare = Math.round(500 + (km * 25));
+
+      var fareBadge = document.getElementById('liveFareText');
+      if (fareBadge) {
+        fareBadge.innerHTML = km + " km • Est. ₹" + tataAceFare;
+      }
+    }
+
+    document.querySelectorAll('[data-goto="busView"]').forEach(function(el) {
+      el.addEventListener('click', initBusMap);
+    });
+    document.querySelectorAll('[data-goto="truckView"]').forEach(function(el) {
+      el.addEventListener('click', initTruckMap);
+    });
+
+    setTimeout(function() {
+      var cards = document.querySelectorAll('#busView .item-card');
+      if (cards[0]) {
+        cards[0].style.cursor = 'pointer';
+        cards[0].onclick = function() { selectBusTour('digha'); };
+      }
+      if (cards[1]) {
+        cards[1].style.cursor = 'pointer';
+        cards[1].onclick = function() { selectBusTour('puri'); };
+      }
+    }, 1000);
+
+    // Dynamic Bottom Nav Tab Switcher
+    document.querySelectorAll('.bottom-nav .nav-item').forEach(function(item) {
+      item.addEventListener('click', function() {
+        document.querySelectorAll('.bottom-nav .nav-item').forEach(function(nav) {
+          nav.classList.remove('active');
+        });
+        this.classList.add('active');
+
+        var targetViewId = this.getAttribute('data-tab');
+        if (targetViewId) {
+          document.querySelectorAll('.view').forEach(function(view) {
+            view.classList.remove('active');
+          });
+          var activeView = document.getElementById(targetViewId);
+          if (activeView) activeView.classList.add('active');
+        }
+      });
+    });
+
 </script>
 </body>
 </html>
