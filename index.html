@@ -496,6 +496,7 @@
 <body>
 <div class="app-screen">
 
+
   <!-- HOME SCREEN -->
   <div id="homeView" class="view active">
     <div class="app-header">
@@ -641,33 +642,83 @@
 
     <button class="primary-btn" id="btnConfirmRide">Confirm & Request Driver</button>
   </div>
-  <!-- BUS / HAAT TRANSPORT SCREEN -->
-  <div id="busView" class="view">
+    <div id="busView" class="view">
     <div class="subpage-nav">
       <button class="icon-btn btn-back">←</button>
-      <h3>Bus & Market Schedule</h3>
+      <h3>Long Tour & Bus Booking</h3>
     </div>
 
-    <div class="segmented-control">
-      <button class="active" id="btnLocalBus">Regular Buses</button>
-      <button id="btnTourPkg">Haat Specials</button>
+    <!-- Long Tour Notice -->
+    <div style="background:#eff6ff; border:1px solid #bfdbfe; margin:10px 16px; padding:10px 14px; border-radius:var(--radius-sm); font-size:11px; color:#1e40af;">
+      🚌 <strong>Special Booking:</strong> Group tour, tirth yatra, parivar tour aur outstation yatra ke liye AC/Non-AC buses uplabdh hain.
     </div>
 
-    <div id="localBusList" class="item-list">
-      <div class="item-card">
-        <div class="item-info">
-          <span class="item-avatar">🚌</span>
-          <div>
-            <div class="item-title">Belpahari ➔ Jhargram (via Silda)</div>
-            <div class="item-sub">Every 45 mins • 06:30 AM to 06:00 PM</div>
+    <div class="item-list">
+      <!-- Tour 1: Sea Beach Tour -->
+      <div class="item-card" style="flex-direction: column; align-items: stretch; gap: 8px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="item-info">
+            <span class="item-avatar">🏖️</span>
+            <div>
+              <div class="item-title">Belpahari ➔ Digha / Mandarmani</div>
+              <div class="item-sub">2 Night / 3 Days Weekend Tour • 32/45 Seater AC</div>
+            </div>
+          </div>
+          <div class="item-fare" style="text-align:right;">
+            <strong style="color:var(--primary); font-size:16px;">₹14,500</strong>
+            <div style="font-size:10px; color:var(--text-muted);">Starting / Bus</div>
           </div>
         </div>
-        <div class="item-fare">
-          <strong>₹40</strong><br>
-          <button class="primary-btn btn-book-direct" style="margin:4px 0 0; padding:4px 10px; font-size:11px;" data-title="Bus: Belpahari to Jhargram" data-fare="40">Book Seat</button>
+        <div style="display:flex; gap:8px; margin-top:4px;">
+          <a href="tel:+917601907868" class="primary-btn" style="flex:1; margin:0; text-align:center; padding:7px; font-size:11px; background:#1e293b; text-decoration:none; color:white; border-radius:12px;">📞 Call Operator</a>
+          <a href="https://wa.me/917601907868?text=Namaste,%20mujhe%20Digha%20Tour%20Bus%20booking%20ki%20jaankari%20chahiye." target="_blank" class="primary-btn" style="flex:1; margin:0; text-align:center; padding:7px; font-size:11px; background:#25D366; text-decoration:none; color:white; border-radius:12px;">💬 WhatsApp</a>
+        </div>
+      </div>
+
+      <!-- Tour 2: Tirth / Religious Tour -->
+      <div class="item-card" style="flex-direction: column; align-items: stretch; gap: 8px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="item-info">
+            <span class="item-avatar">🛕</span>
+            <div>
+              <div class="item-title">Belpahari / Odalchua ➔ Puri Dham</div>
+              <div class="item-sub">Jagannath Darshan Special • Deluxe Pushback Bus</div>
+            </div>
+          </div>
+          <div class="item-fare" style="text-align:right;">
+            <strong style="color:var(--primary); font-size:16px;">₹22,000</strong>
+            <div style="font-size:10px; color:var(--text-muted);">Complete Bus</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; margin-top:4px;">
+          <a href="tel:+917601907868" class="primary-btn" style="flex:1; margin:0; text-align:center; padding:7px; font-size:11px; background:#1e293b; text-decoration:none; color:white; border-radius:12px;">📞 Call Operator</a>
+          <a href="https://wa.me/917601907868?text=Namaste,%20Puri%20Dham%20tour%20bus%20booking%20ke%20liye%20baat%20karni%20hai." target="_blank" class="primary-btn" style="flex:1; margin:0; text-align:center; padding:7px; font-size:11px; background:#25D366; text-decoration:none; color:white; border-radius:12px;">💬 WhatsApp</a>
+        </div>
+      </div>
+
+      <!-- Tour 3: Custom Long Tour -->
+      <div class="item-card" style="flex-direction: column; align-items: stretch; gap: 8px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="item-info">
+            <span class="item-avatar">🗺️</span>
+            <div>
+              <div class="item-title">Custom Outstation Route (Any Location)</div>
+              <div class="item-sub">Marriage Party, School Excursion ya Private Tour</div>
+            </div>
+          </div>
+          <div class="item-fare" style="text-align:right;">
+            <strong style="color:var(--primary); font-size:14px;">On Demand</strong>
+            <div style="font-size:10px; color:var(--text-muted);">₹35 - ₹45 / km</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; margin-top:4px;">
+          <a href="tel:+917601907868" class="primary-btn" style="flex:1; margin:0; text-align:center; padding:7px; font-size:11px; background:#1e293b; text-decoration:none; color:white; border-radius:12px;">📞 Custom Quote</a>
+          <a href="https://wa.me/917601907868?text=Namaste,%20mujhe%20custom%20tour%20ke%20liye%20bus%20chahiye." target="_blank" class="primary-btn" style="flex:1; margin:0; text-align:center; padding:7px; font-size:11px; background:#25D366; text-decoration:none; color:white; border-radius:12px;">💬 WhatsApp</a>
         </div>
       </div>
     </div>
+  </div>
+
 
     <div id="tourPkgList" class="item-list" style="display:none;">
       <div class="item-card">
@@ -684,31 +735,86 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- GOODS / TRUCK SCREEN -->
+    <!-- TRUCK & GOODS CARGO SCREEN -->
   <div id="truckView" class="view">
     <div class="subpage-nav">
       <button class="icon-btn btn-back">←</button>
-      <h3>Goods & Agricultural Cargo</h3>
+      <h3>Maal Dhulai & Goods Truck</h3>
     </div>
 
-    <div class="item-list" style="margin-top:10px;">
-      <div class="item-card">
-        <div class="item-info">
-          <span class="item-avatar">🛻</span>
-          <div>
-            <div class="item-title">Mini Pickup (Tata Ace)</div>
-            <div class="item-sub">Vegetables, Paddy & Building Material</div>
+    <div style="background:#fef3c7; border:1px solid #fde68a; margin:10px 16px; padding:10px 14px; border-radius:var(--radius-sm); font-size:11px; color:#92400e;">
+      🚚 <strong>Kisan & Dukandar Special:</strong> Sabzi, Dhaan, Baans, Building Material ya Haat ka saaman transport karne ke liye gaadi book karein.
+    </div>
+
+    <div class="item-list">
+
+      <!-- Vehicle 1: Chhota Hathi / Tata Ace -->
+      <div class="item-card" style="flex-direction: column; align-items: stretch; gap: 8px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="item-info">
+            <span class="item-avatar">🛻</span>
+            <div>
+              <div class="item-title">Tata Ace (Chhota Hathi)</div>
+              <div class="item-sub">Cap: Up to 1 Ton (10-15 Bori) • Local & Haat Supply</div>
+            </div>
+          </div>
+          <div class="item-fare" style="text-align:right;">
+            <strong style="color:var(--primary); font-size:16px;">₹600</strong>
+            <div style="font-size:10px; color:var(--text-muted);">Base Fare (Local)</div>
           </div>
         </div>
-        <div class="item-fare">
-          <strong>₹1,800</strong><br>
-          <button class="primary-btn btn-book-direct" style="margin:4px 0 0; padding:4px 10px; font-size:11px;" data-title="Mini Pickup Cargo" data-fare="1800">Request</button>
+        <div style="display:flex; gap:8px; margin-top:4px;">
+          <a href="tel:+917601907868" class="primary-btn" style="flex:1; margin:0; text-align:center; padding:7px; font-size:11px; background:#1e293b; text-decoration:none; color:white; border-radius:12px;">📞 Call Driver</a>
+          <a href="https://wa.me/917601907868?text=Namaste,%20mujhe%20Tata%20Ace%20(Chhota%20Hathi)%20goods%20booking%20karni%20hai." target="_blank" class="primary-btn" style="flex:1; margin:0; text-align:center; padding:7px; font-size:11px; background:#25D366; text-decoration:none; color:white; border-radius:12px;">💬 WhatsApp</a>
         </div>
       </div>
-    </div>
+
+      <!-- Vehicle 2: Mahindra Bolero Pickup -->
+      <div class="item-card" style="flex-direction: column; align-items: stretch; gap: 8px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="item-info">
+            <span class="item-avatar">🚚</span>
+            <div>
+              <div class="item-title">Mahindra Bolero Maxi Truck</div>
+              <div class="item-sub">Cap: 1.5 - 2 Ton (Heavy Load / Baans / Cement)</div>
+            </div>
+          </div>
+          <div class="item-fare" style="text-align:right;">
+            <strong style="color:var(--primary); font-size:16px;">₹1,200</strong>
+            <div style="font-size:10px; color:var(--text-muted);">Starting Fare</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; margin-top:4px;">
+          <a href="tel:+917601907868" class="primary-btn" style="flex:1; margin:0; text-align:center; padding:7px; font-size:11px; background:#1e293b; text-decoration:none; color:white; border-radius:12px;">📞 Call Driver</a>
+          <a href="https://wa.me/917601907868?text=Namaste,%20mujhe%20Bolero%20Pickup%20Truck%20booking%20ke%20liye%20baat%20karni%20hai." target="_blank" class="primary-btn" style="flex:1; margin:0; text-align:center; padding:7px; font-size:11px; background:#25D366; text-decoration:none; color:white; border-radius:12px;">💬 WhatsApp</a>
+        </div>
+      </div>
+
+      <!-- Vehicle 3: Tractor / Trolley Heavy -->
+      <div class="item-card" style="flex-direction: column; align-items: stretch; gap: 8px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="item-info">
+            <span class="item-avatar">🚜</span>
+            <div>
+              <div class="item-title">Tractor Trolley (Kisan Special)</div>
+              <div class="item-sub">Khet se Mandi tak dhaan, mitti ya bhari samaan dhulai</div>
+            </div>
+          </div>
+          <div class="item-fare" style="text-align:right;">
+            <strong style="color:var(--primary); font-size:14px;">Hourly / Trip</strong>
+            <div style="font-size:10px; color:var(--text-muted);">Kisan Rate</div>
+          </div>
+        </div>
+                <div style="display:flex; gap:8px; margin-top:4px;">
+          <a href="tel:+917601907868" class="primary-btn" style="flex:1; margin:0; text-align:center; padding:7px; font-size:11px; background:#1e293b; text-decoration:none; color:white; border-radius:12px;">📞 Call Driver</a>
+          <a href="https://wa.me/917601907868?text=Namaste,%20mujhe%20kheti%20saaman%20ke%20liye%20Tractor%20Trolley%20chahiye." target="_blank" class="primary-btn" style="flex:1; margin:0; text-align:center; padding:7px; font-size:11px; background:#25D366; text-decoration:none; color:white; border-radius:12px;">💬 WhatsApp</a>
+        </div>
+      </div>
   </div>
+
+
+
 
   <!-- POST REQUIREMENT SCREEN -->
   <div id="postReqView" class="view">
