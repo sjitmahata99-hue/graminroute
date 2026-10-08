@@ -1314,6 +1314,26 @@
 
               card.appendChild(info);
               card.appendChild(actionBtn);
+                            var contactRow = document.createElement('div');
+              contactRow.style.cssText = 'display:flex; gap:8px; margin-top:8px;';
+
+              var btnCall = document.createElement('a');
+              btnCall.href = 'tel:+917601907868';
+              btnCall.className = 'primary-btn';
+              btnCall.style.cssText = 'margin:0; flex:1; text-align:center; padding:6px; font-size:11px; background:#1e293b; text-decoration:none; color:white; border-radius:14px;';
+              btnCall.innerText = '📞 Call';
+
+              var btnWhatsApp = document.createElement('a');
+              btnWhatsApp.href = 'https://wa.me/917601907868?text=' + encodeURIComponent('GraminRoute: Ride update for ' + route);
+              btnWhatsApp.target = '_blank';
+              btnWhatsApp.className = 'primary-btn';
+              btnWhatsApp.style.cssText = 'margin:0; flex:1; text-align:center; padding:6px; font-size:11px; background:#25D366; text-decoration:none; color:white; border-radius:14px;';
+              btnWhatsApp.innerText = '💬 WhatsApp';
+
+              contactRow.appendChild(btnCall);
+              contactRow.appendChild(btnWhatsApp);
+              card.appendChild(contactRow);
+
               driverQueue.appendChild(card);
             }
 
