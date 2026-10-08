@@ -5,7 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>GraminRoute - Har Safar Aasaan</title>
 
-  <!-- Leaflet Map CSS & JS (Free Real-time Interactive Map) -->
+  <!-- Open Graph Meta for Social & WhatsApp Sharing -->
+  <meta property="og:title" content="GraminRoute - Rural Transport & Rides">
+  <meta property="og:description" content="Belpahari, Odalchua, Silda aur aas-paas ke gaon ke liye e-rickshaw, bike aur emergency transport service.">
+  <meta name="theme-color" content="#059669">
+
+  <!-- Leaflet Map CSS & JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -19,6 +24,8 @@
       --primary-dark: #064e3b;
       --primary-light: #ecfdf5;
       --accent: #10b981;
+      --danger: #dc2626;
+      --danger-light: #fef2f2;
       --text-main: #111827;
       --text-muted: #6b7280;
       --bg: #f3f4f6;
@@ -80,7 +87,7 @@
 
     .app-header {
       background: white;
-      padding: 14px 18px;
+      padding: 12px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -106,17 +113,45 @@
       cursor: pointer;
       padding: 4px;
     }
+    .emergency-strip {
+      background: var(--danger-light);
+      border: 1px solid #fecaca;
+      border-radius: var(--radius-md);
+      margin: 10px 16px 4px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .emergency-strip .em-text {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .emergency-strip .em-badge {
+      background: var(--danger);
+      color: white;
+      font-size: 10px;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+    }
 
     .banner {
       background: linear-gradient(135deg, #064e3b, #10b981);
       color: white;
-      margin: 14px 16px;
-      padding: 20px;
+      margin: 10px 16px;
+      padding: 16px 18px;
       border-radius: var(--radius-md);
+      position: relative;
     }
 
     .banner h3 {
-      font-size: 20px;
+      font-size: 18px;
       line-height: 1.25;
     }
 
@@ -127,7 +162,7 @@
     }
 
     .banner-btn {
-      margin-top: 14px;
+      margin-top: 12px;
       background: white;
       color: var(--primary-dark);
       border: none;
@@ -138,8 +173,21 @@
       cursor: pointer;
     }
 
+    .haat-notice {
+      background: #fef3c7;
+      border: 1px solid #fde68a;
+      margin: 6px 16px 10px;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      color: #92400e;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
     .section-title {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: bold;
       padding: 6px 18px;
       color: var(--text-main);
@@ -155,7 +203,7 @@
     .service-card {
       background: white;
       border-radius: var(--radius-md);
-      padding: 14px 8px;
+      padding: 12px 8px;
       text-align: center;
       cursor: pointer;
       border: 1px solid #f1f5f9;
@@ -169,11 +217,11 @@
 
     .service-card .icon-box {
       font-size: 26px;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .service-card h4 {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text-main);
     }
 
@@ -193,14 +241,14 @@
     }
 
     .subpage-nav h3 {
-      font-size: 17px;
+      font-size: 16px;
     }
 
     .form-box {
-      padding: 16px;
+      padding: 14px 16px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
     .input-group {
@@ -227,6 +275,32 @@
       background: transparent;
       color: var(--text-main);
     }
+    .sharing-toggle-row {
+      display: flex;
+      background: #e2e8f0;
+      border-radius: 25px;
+      padding: 4px;
+      gap: 4px;
+      margin: 4px 16px 10px;
+    }
+
+    .sharing-toggle-row button {
+      flex: 1;
+      border: none;
+      padding: 8px 10px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 12px;
+      color: var(--text-muted);
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .sharing-toggle-row button.active {
+      background: var(--primary);
+      color: white;
+    }
+
     .segmented-control {
       display: flex;
       background: #e2e8f0;
@@ -263,12 +337,11 @@
     .item-card {
       background: white;
       border-radius: var(--radius-md);
-      padding: 12px 16px;
+      padding: 12px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       border: 1px solid var(--border);
-      cursor: pointer;
     }
 
     .item-info {
@@ -282,7 +355,7 @@
     }
 
     .item-title {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: bold;
     }
 
@@ -302,7 +375,7 @@
       font-size: 14px;
       font-weight: bold;
       border: none;
-      padding: 14px;
+      padding: 13px;
       border-radius: 24px;
       cursor: pointer;
       text-align: center;
@@ -311,6 +384,10 @@
 
     .primary-btn:active {
       opacity: 0.9;
+    }
+
+    .sos-btn {
+      background: var(--danger) !important;
     }
 
     #liveMap {
@@ -324,26 +401,26 @@
     .stats-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      padding: 14px 16px;
+      gap: 10px;
+      padding: 10px 16px;
     }
 
     .stat-card {
       background: white;
-      padding: 14px;
+      padding: 12px 14px;
       border-radius: var(--radius-md);
       border: 1px solid var(--border);
     }
 
     .stat-card small {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--text-muted);
     }
 
     .stat-card h2 {
-      font-size: 20px;
+      font-size: 18px;
       color: var(--primary-dark);
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
     .nav-bar {
@@ -354,13 +431,12 @@
       max-width: 430px;
       margin: auto;
       background: white;
-      height: 65px;
+      height: 62px;
       display: flex;
       justify-content: space-around;
       align-items: center;
       border-top: 1px solid var(--border);
       z-index: 99999;
-      pointer-events: auto !important;
     }
 
     .nav-item {
@@ -377,7 +453,6 @@
       font-size: 11px;
       font-weight: bold;
       cursor: pointer;
-      user-select: none;
     }
 
     .nav-item.active {
@@ -385,8 +460,7 @@
     }
 
     .nav-item span {
-      font-size: 20px;
-      pointer-events: none;
+      font-size: 18px;
     }
 
     .modal-backdrop {
@@ -413,16 +487,6 @@
       flex-direction: column;
       gap: 12px;
     }
-
-    .lang-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 14px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
@@ -431,65 +495,83 @@
   <!-- HOME SCREEN -->
   <div id="homeView" class="view active">
     <div class="app-header">
-      <div class="location">📍 <strong>Belpahari, West Bengal</strong></div>
+      <div class="location">📍 <strong>Belpahari (Odalchua Region)</strong></div>
       <button class="icon-btn" id="btnOpenLang">🌐</button>
     </div>
 
-    <div class="banner">
-      <h3>Need Transport?<br>We are here to help!</h3>
-      <p>Gaon se Shehar tak... Har Safar Aasaan!</p>
-      <button class="banner-btn" id="btnBannerBook">Book Now</button>
+    <!-- Medical Emergency SOS Bar -->
+    <div class="emergency-strip" id="btnEmergencyTrigger">
+      <div class="em-text">
+        <span style="font-size: 22px;">🚨</span>
+        <div>
+          <strong style="font-size: 12px; color: var(--danger);">Emergency Hospital / Ambulance Ride</strong>
+          <div style="font-size: 10px; color: var(--text-muted);">Priority 24x7 Driver Dispatch</div>
+        </div>
+      </div>
+      <span class="em-badge">URGENT</span>
     </div>
 
-    <h3 class="section-title">All Services</h3>
+    <!-- Haat Day Notice -->
+    <div class="haat-notice">
+      <span>🛍️</span>
+      <span><strong>Weekly Haat:</strong> Belpahari (Wed/Sat) • Silda (Mon/Fri)</span>
+    </div>
+
+    <!-- Hero Banner -->
+    <div class="banner">
+      <h3>Rural Travel, Simplified</h3>
+      <p>Gaon se Haat, Hospital aur Shehar tak... Har Safar Aasaan!</p>
+      <button class="banner-btn" id="btnBannerBook">Book Ride Now</button>
+    </div>
+
+    <h3 class="section-title">All Transport Options</h3>
     <div class="grid-services">
       <div class="service-card" data-goto="etaxiView">
         <div class="icon-box">🛺</div>
-        <h4>E-Taxi</h4>
-        <p>Ride Now</p>
+        <h4>E-Taxi / Toto</h4>
+        <p>Seat & Full</p>
       </div>
       <div class="service-card" data-goto="etaxiView">
         <div class="icon-box">🏍️</div>
-        <h4>Bike</h4>
-        <p>Quick Ride</p>
+        <h4>Bike Taxi</h4>
+        <p>Fastest Link</p>
       </div>
       <div class="service-card" data-goto="etaxiView">
         <div class="icon-box">🚗</div>
-        <h4>Car</h4>
-        <p>Comfort Ride</p>
+        <h4>Car / Bolero</h4>
+        <p>Family Travel</p>
       </div>
       <div class="service-card" data-goto="busView">
         <div class="icon-box">🚌</div>
-        <h4>Bus / Tour</h4>
-        <p>Group Travel</p>
+        <h4>Bus & Haat</h4>
+        <p>Fixed Timings</p>
       </div>
       <div class="service-card" data-goto="truckView">
         <div class="icon-box">🚚</div>
-        <h4>Truck / Goods</h4>
-        <p>Heavy & Light</p>
+        <h4>Goods Pickup</h4>
+        <p>Crop & Cargo</p>
       </div>
       <div class="service-card" data-goto="postReqView">
         <div class="icon-box">📦</div>
-        <h4>Post Req.</h4>
+        <h4>Post Need</h4>
         <p>Get Quotes</p>
       </div>
     </div>
 
-    <h3 class="section-title" style="margin-top: 10px;">Switch User View</h3>
+    <h3 class="section-title" style="margin-top: 8px;">Portal Switch</h3>
     <div style="display:flex; gap:8px; padding:0 16px;">
-      <button class="primary-btn" style="flex:1; margin:0;" id="btnGoDriver">Driver View</button>
-      <button class="primary-btn" style="flex:1; margin:0; background:#334155;" id="btnGoAdmin">Admin View</button>
+      <button class="primary-btn" style="flex:1; margin:0;" id="btnGoDriver">👨‍✈️ Driver Portal</button>
+      <button class="primary-btn" style="flex:1; margin:0; background:#334155;" id="btnGoAdmin">📊 Operations</button>
     </div>
   </div>
-
-  <!-- E-TAXI SCREEN (WITH REAL LEAFLET MAP & EXACT ROAD ROUTE) -->
+  <!-- E-TAXI SCREEN (MAP, ROAD ROUTE & SEAT SHARING) -->
   <div id="etaxiView" class="view">
     <div class="subpage-nav">
       <button class="icon-btn btn-back">←</button>
-      <h3>E-Taxi Booking</h3>
+      <h3 id="etaxiTitleHeading">E-Taxi Booking</h3>
     </div>
 
-    <!-- Real-time Interactive Street Map -->
+    <!-- Leaflet Street Map -->
     <div id="liveMap"></div>
 
     <div class="form-box">
@@ -500,19 +582,26 @@
             📍 Use Current Location
           </button>
         </div>
-        <input id="etaxiPickup" placeholder="Fetching location or enter manually..." value="Belpahari Main Chowk">
+        <input id="etaxiPickup" placeholder="Detecting or enter manually..." value="Odalchua, Belpahari">
         <div id="gpsStatus" style="font-size:10px; color:#6b7280; margin-top:4px; display:none;"></div>
       </div>
+
       <div class="input-group">
-        <label>Drop Location (Real road route search)</label>
-        <input id="etaxiDrop" placeholder="Enter drop place (e.g. Jhargram, Silda, Ghatsila)">
+        <label>Drop Location (Road Route Calculation)</label>
+        <input id="etaxiDrop" placeholder="Enter village or town (e.g. Silda, Jhargram)">
       </div>
     </div>
 
+    <!-- Seat Sharing Selector -->
+    <div class="sharing-toggle-row">
+      <button class="active" id="btnModeShared">Shared Seat (₹ Sasta)</button>
+      <button id="btnModeFull">Book Entire Vehicle</button>
+    </div>
+
     <!-- Distance & Route Stats Bar -->
-    <div id="routeEstimateBar" style="margin: 0 16px 10px; padding: 10px 14px; background: white; border-radius: var(--radius-sm); border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+    <div id="routeEstimateBar" style="margin: 0 16px 8px; padding: 8px 12px; background: white; border-radius: var(--radius-sm); border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
       <div>
-        <span style="color: var(--text-muted);">Real Distance:</span>
+        <span style="color: var(--text-muted);">Road Distance:</span>
         <strong id="displayDistance">0.0 km</strong>
       </div>
       <div>
@@ -521,43 +610,43 @@
       </div>
     </div>
 
-    <!-- Dynamic Vehicles -->
+    <!-- Vehicles List -->
     <div class="item-list">
-      <div class="item-card vehicle-option" id="cardOptionRickshaw" data-name="Mini / E-Rickshaw" data-base="30" data-perkm="10" style="border: 2px solid var(--primary);">
+      <div class="item-card vehicle-option" id="cardOptionRickshaw" data-name="Toto / E-Rickshaw" data-base="30" data-perkm="10" style="border: 2px solid var(--primary);">
         <div class="item-info">
           <span class="item-avatar">🛺</span>
           <div>
-            <div class="item-title">Mini / E-Rickshaw</div>
-            <div class="item-sub">Base ₹30 + ₹10/km • Eco Friendly</div>
+            <div class="item-title">Toto / E-Rickshaw</div>
+            <div class="item-sub" id="subRickshawDesc">Eco • Base ₹30 + ₹10/km</div>
           </div>
         </div>
         <div class="item-fare"><strong id="fareDisplayRickshaw">₹30</strong></div>
       </div>
 
-      <div class="item-card vehicle-option" id="cardOptionSedan" data-name="Sedan Car" data-base="60" data-perkm="15">
+      <div class="item-card vehicle-option" id="cardOptionSedan" data-name="Bolero / Car" data-base="60" data-perkm="15">
         <div class="item-info">
           <span class="item-avatar">🚗</span>
           <div>
-            <div class="item-title">Sedan Car</div>
-            <div class="item-sub">Base ₹60 + ₹15/km • AC Comfort</div>
+            <div class="item-title">Bolero / Car</div>
+            <div class="item-sub" id="subSedanDesc">AC Comfort • Base ₹60 + ₹15/km</div>
           </div>
         </div>
         <div class="item-fare"><strong id="fareDisplaySedan">₹60</strong></div>
       </div>
     </div>
 
-    <button class="primary-btn" id="btnConfirmRide">Confirm & Book Ride</button>
+    <button class="primary-btn" id="btnConfirmRide">Confirm & Request Driver</button>
   </div>
-  <!-- BUS / TOUR SCREEN -->
+  <!-- BUS / HAAT TRANSPORT SCREEN -->
   <div id="busView" class="view">
     <div class="subpage-nav">
       <button class="icon-btn btn-back">←</button>
-      <h3>Bus / Tour</h3>
+      <h3>Bus & Market Schedule</h3>
     </div>
 
     <div class="segmented-control">
-      <button class="active" id="btnLocalBus">Local Bus</button>
-      <button id="btnTourPkg">Tour Packages</button>
+      <button class="active" id="btnLocalBus">Regular Buses</button>
+      <button id="btnTourPkg">Haat Specials</button>
     </div>
 
     <div id="localBusList" class="item-list">
@@ -565,13 +654,13 @@
         <div class="item-info">
           <span class="item-avatar">🚌</span>
           <div>
-            <div class="item-title">Belpahari → Jhargram</div>
-            <div class="item-sub">1h 15m • Dep: 07:00 AM</div>
+            <div class="item-title">Belpahari ➔ Jhargram (via Silda)</div>
+            <div class="item-sub">Every 45 mins • 06:30 AM to 06:00 PM</div>
           </div>
         </div>
         <div class="item-fare">
-          <strong>₹45</strong><br>
-          <button class="primary-btn btn-book-direct" style="margin:4px 0 0; padding:4px 10px; font-size:11px;" data-title="Bus: Belpahari to Jhargram" data-fare="45">Book</button>
+          <strong>₹40</strong><br>
+          <button class="primary-btn btn-book-direct" style="margin:4px 0 0; padding:4px 10px; font-size:11px;" data-title="Bus: Belpahari to Jhargram" data-fare="40">Book Seat</button>
         </div>
       </div>
     </div>
@@ -579,25 +668,25 @@
     <div id="tourPkgList" class="item-list" style="display:none;">
       <div class="item-card">
         <div class="item-info">
-          <span class="item-avatar">🏞</span>
+          <span class="item-avatar">🛍️</span>
           <div>
-            <div class="item-title">Weekend Tour Package</div>
-            <div class="item-sub">Belpahari - Dhangikusum • 2 Days</div>
+            <div class="item-title">Silda Haat Special Return Shuttle</div>
+            <div class="item-sub">Monday & Friday Haat Day • Morning Return</div>
           </div>
         </div>
         <div class="item-fare">
-          <strong>₹1,800</strong><br>
-          <button class="primary-btn btn-book-direct" style="margin:4px 0 0; padding:4px 10px; font-size:11px;" data-title="Tour: Belpahari Circuit" data-fare="1800">Book</button>
+          <strong>₹50</strong><br>
+          <button class="primary-btn btn-book-direct" style="margin:4px 0 0; padding:4px 10px; font-size:11px;" data-title="Haat Shuttle: Silda" data-fare="50">Book Seat</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- TRUCK / GOODS SCREEN -->
+  <!-- GOODS / TRUCK SCREEN -->
   <div id="truckView" class="view">
     <div class="subpage-nav">
       <button class="icon-btn btn-back">←</button>
-      <h3>Goods Transport</h3>
+      <h3>Goods & Agricultural Cargo</h3>
     </div>
 
     <div class="item-list" style="margin-top:10px;">
@@ -605,13 +694,13 @@
         <div class="item-info">
           <span class="item-avatar">🛻</span>
           <div>
-            <div class="item-title">Mini Truck</div>
-            <div class="item-sub">Up to 1.5 Ton</div>
+            <div class="item-title">Mini Pickup (Tata Ace)</div>
+            <div class="item-sub">Vegetables, Paddy & Building Material</div>
           </div>
         </div>
         <div class="item-fare">
-          <strong>₹2,500</strong><br>
-          <button class="primary-btn btn-book-direct" style="margin:4px 0 0; padding:4px 10px; font-size:11px;" data-title="Mini Truck 1.5T" data-fare="2500">Book</button>
+          <strong>₹1,800</strong><br>
+          <button class="primary-btn btn-book-direct" style="margin:4px 0 0; padding:4px 10px; font-size:11px;" data-title="Mini Pickup Cargo" data-fare="1800">Request</button>
         </div>
       </div>
     </div>
@@ -621,89 +710,80 @@
   <div id="postReqView" class="view">
     <div class="subpage-nav">
       <button class="icon-btn btn-back">←</button>
-      <h3>Post Requirement</h3>
+      <h3>Post Travel or Cargo Need</h3>
     </div>
 
     <div class="form-box">
       <div class="input-group">
-        <label>From</label>
-        <input id="postFrom" value="Belpahari">
+        <label>From (Gaon / Area)</label>
+        <input id="postFrom" value="Odalchua">
       </div>
       <div class="input-group">
-        <label>To</label>
-        <input id="postTo" placeholder="Enter destination">
+        <label>Destination</label>
+        <input id="postTo" placeholder="Where do you need transport?">
       </div>
       <div class="input-group">
         <label>Details</label>
-        <textarea id="postDesc" placeholder="Describe cargo weight or passenger count"></textarea>
+        <textarea id="postDesc" placeholder="Number of persons, cargo sacks or timings"></textarea>
       </div>
     </div>
 
-    <button class="primary-btn" id="btnSubmitReq">Post Requirement</button>
+    <button class="primary-btn" id="btnSubmitReq">Post for Local Drivers</button>
   </div>
 
-  <!-- CUSTOMER TRIPS SCREEN -->
+  <!-- CUSTOMER MY TRIPS SCREEN -->
   <div id="tripsView" class="view">
     <div class="subpage-nav">
-      <h3>My Trips</h3>
+      <h3>My Bookings & History</h3>
     </div>
     <div class="item-list" id="customerTripsContainer" style="margin-top:14px;">
-      <div class="item-card">
-        <div class="item-info">
-          <span class="item-avatar">🛺</span>
-          <div>
-            <div class="item-title">Belpahari → Silda</div>
-            <div class="item-sub">E-Taxi • <span style="color:var(--primary); font-weight:bold;">Completed</span></div>
-          </div>
-        </div>
-        <div class="item-fare"><strong>₹120</strong></div>
-      </div>
+      <p style="text-align:center; padding:15px; font-size:12px; color:var(--text-muted);">Loading your bookings...</p>
     </div>
   </div>
   <!-- DRIVER DASHBOARD -->
   <div id="driverDashboardView" class="view">
     <div class="app-header">
-      <div style="font-size:14px; font-weight:bold;">👨‍✈️ Driver: Rakesh Mahata</div>
+      <div style="font-size:13px; font-weight:bold;">👨‍✈️ Driver Portal: Belpahari</div>
       <button class="icon-btn btn-back">✕</button>
     </div>
 
-    <div style="margin:10px 16px; padding:12px 16px; background:white; border-radius:var(--radius-md); display:flex; justify-content:space-between; align-items:center; border:1px solid var(--border);">
+    <div style="margin:10px 16px; padding:12px 14px; background:white; border-radius:var(--radius-md); display:flex; justify-content:space-between; align-items:center; border:1px solid var(--border);">
       <div>
-        <div style="font-size:13px; font-weight:bold;">Duty Status</div>
-        <div style="font-size:11px; color:var(--text-muted);" id="driverStatusSubtitle">Ready for customer requests</div>
+        <div style="font-size:13px; font-weight:bold;">Driver Status</div>
+        <div style="font-size:11px; color:var(--text-muted);" id="driverStatusSubtitle">Ready for customer ride alerts</div>
       </div>
       <button id="btnDriverDutyToggle" style="border:none; background:#dcfce7; color:var(--primary); font-size:11px; font-weight:bold; padding:6px 14px; border-radius:20px; cursor:pointer;">● Online</button>
     </div>
 
     <div class="stats-row">
       <div class="stat-card">
-        <small>Today's Completed</small>
+        <small>Today Completed</small>
         <h2 id="driverCompletedTripsCount">0</h2>
       </div>
       <div class="stat-card">
-        <small>Driver Earnings</small>
+        <small>Total Cash Earned</small>
         <h2 id="driverLiveEarnings">₹0</h2>
       </div>
       <div class="stat-card">
-        <small>Available Rides</small>
+        <small>Active Requests</small>
         <h2 id="driverLiveTripsCount">0</h2>
       </div>
       <div class="stat-card">
-        <small>Acceptance Rate</small>
-        <h2 id="driverAcceptRate">98%</h2>
+        <small>Driver Rating</small>
+        <h2>4.9 ⭐</h2>
       </div>
     </div>
 
-    <h3 class="section-title">Live Ride Requests & Active Trips</h3>
+    <h3 class="section-title">Live Ride & SOS Queue</h3>
     <div class="item-list" id="driverLiveQueue">
-      <p style="text-align:center; padding:15px; font-size:12px; color:var(--text-muted);">Waiting for new rides...</p>
+      <p style="text-align:center; padding:15px; font-size:12px; color:var(--text-muted);">Waiting for new ride requests...</p>
     </div>
   </div>
 
   <!-- ADMIN DASHBOARD -->
   <div id="adminDashboardView" class="view">
     <div class="app-header">
-      <div style="font-size:14px; font-weight:bold;">📊 GraminRoute Operations Hub</div>
+      <div style="font-size:13px; font-weight:bold;">📊 GraminRoute Operations Hub</div>
       <button class="icon-btn btn-back">✕</button>
     </div>
 
@@ -713,61 +793,37 @@
         <h2 id="adminTotalBookings">0</h2>
       </div>
       <div class="stat-card">
-        <small>Gross Fare Total</small>
+        <small>Gross Value</small>
         <h2 id="adminGrossFare">₹0</h2>
       </div>
       <div class="stat-card">
-        <small>Active Drivers</small>
-        <h2 id="adminActiveDrivers">18</h2>
+        <small>Active Corridors</small>
+        <h2>12 Gaon</h2>
       </div>
       <div class="stat-card">
-        <small>Custom Quotes</small>
+        <small>Quotes Pending</small>
         <h2 id="adminPendingQuotes">0</h2>
       </div>
     </div>
 
-    <h3 class="section-title">Top Rural Corridors</h3>
-    <div class="item-list">
-      <div class="item-card">
-        <div class="item-info">
-          <span>🛺</span>
-          <div>
-            <div class="item-title">Belpahari ➔ Jhargram</div>
-            <div class="item-sub">Market & Medical trips</div>
-          </div>
-        </div>
-        <div class="item-fare"><strong>64%</strong></div>
-      </div>
-      <div class="item-card">
-        <div class="item-info">
-          <span>🏍️</span>
-          <div>
-            <div class="item-title">Belpahari ➔ Silda</div>
-            <div class="item-sub">Daily commuter route</div>
-          </div>
-        </div>
-        <div class="item-fare"><strong>28%</strong></div>
-      </div>
-    </div>
-
-    <h3 class="section-title" style="margin-top:14px;">Recent System Bookings</h3>
+    <h3 class="section-title">Recent System Bookings</h3>
     <div class="item-list" id="adminBookingsList">
-      <p style="text-align:center; padding:15px; font-size:12px; color:var(--text-muted);">Loading system data...</p>
+      <p style="text-align:center; padding:15px; font-size:12px; color:var(--text-muted);">Loading activity...</p>
     </div>
   </div>
 
-  <!-- PROFILE SCREEN -->
+  <!-- PROFILE VIEW -->
   <div id="profileView" class="view">
     <div class="subpage-nav">
-      <h3>Profile</h3>
+      <h3>User Profile</h3>
     </div>
     <div style="padding:16px; background:white; margin:16px; border-radius:var(--radius-md); border:1px solid var(--border);">
-      <h4>Sujit Mahata</h4>
-      <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">+91 98765 43210</p>
+      <h4>GraminRoute Passenger</h4>
+      <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">Odalchua / Belpahari Region</p>
     </div>
   </div>
 
-  <!-- FIXED BOTTOM NAVIGATION BAR -->
+  <!-- BOTTOM NAVIGATION -->
   <div class="nav-bar">
     <button class="nav-item active" id="tabHome">
       <span>🏠</span>
@@ -788,23 +844,23 @@
 <!-- LANGUAGE MODAL -->
 <div id="langModal" class="modal-backdrop">
   <div class="modal-body">
-    <h3>Choose Language</h3>
-    <div class="lang-item" data-lang="English">
-      <span>English</span>
+    <h3>Choose Language / ভাষা</h3>
+    <div class="item-card" style="cursor:pointer;" onclick="document.getElementById('langModal').classList.remove('show');">
+      <strong>English</strong>
       <span>✔</span>
     </div>
-    <div class="lang-item" data-lang="हिन्दी (Hindi)">
-      <span>हिन्दी</span>
+    <div class="item-card" style="cursor:pointer;" onclick="document.getElementById('langModal').classList.remove('show');">
+      <strong>हिन्दी (Hindi)</strong>
     </div>
-    <div class="lang-item" data-lang="বাংলা (Bengali)">
-      <span>বাংলা</span>
+    <div class="item-card" style="cursor:pointer;" onclick="document.getElementById('langModal').classList.remove('show');">
+      <strong>বাংলা (Bengali)</strong>
     </div>
-    <button class="primary-btn" id="btnCloseLang">Continue</button>
+    <button class="primary-btn" id="btnCloseLang">Save & Continue</button>
   </div>
 </div>
 <script>
   // @ts-nocheck
-  const firebaseConfig = {
+  var firebaseConfig = {
     apiKey: "AIzaSyB1bgcUZq1kcosSV3h2dMQXRSS84eBUsaE",
     authDomain: "graminroute.firebaseapp.com",
     projectId: "graminroute",
@@ -813,110 +869,90 @@
     appId: "1:833483414541:web:12f8b2b793e3ee33254944"
   };
 
-  let db = null;
+  var db = null;
   try {
     firebase.initializeApp(firebaseConfig);
     db = firebase.firestore();
   } catch (err) {
-    console.warn("Running in local demo mode.");
+    console.warn("Running in local mode.");
   }
 
-  let selectedVehicle = "Mini / E-Rickshaw";
-  let selectedFare = 30;
-  let calculatedDistanceKm = 0.0;
-  let isDriverOnline = true;
+  var selectedVehicle = "Toto / E-Rickshaw";
+  var selectedFare = 30;
+  var calculatedDistanceKm = 0.0;
+  var isDriverOnline = true;
+  var isSharedRide = true;
+  var isEmergencyMode = false;
+  var lastBookingCount = null;
 
-  let lastBookingCount = null;
-
-  // Web Audio 2-Tone Dispatch Chime
-  function playDispatchAlert() {
+  // Single Web Audio Synthesizer for Alerts and SOS Chimes
+  function playDispatchAlert(isUrgent) {
     try {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      var AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!AudioContext) return;
-      const ctx = new AudioContext();
+      var ctx = new AudioContext();
+      if (ctx.state === 'suspended') ctx.resume();
 
-      // First tone (high chime)
-      const osc1 = ctx.createOscillator();
-      const gain1 = ctx.createGain();
-      osc1.type = 'sine';
-      osc1.frequency.setValueAtTime(880, ctx.currentTime);
-      gain1.gain.setValueAtTime(0.2, ctx.currentTime);
-      gain1.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
-      osc1.connect(gain1);
-      gain1.connect(ctx.destination);
-      osc1.start(ctx.currentTime);
-      osc1.stop(ctx.currentTime + 0.35);
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = isUrgent ? 'sawtooth' : 'sine';
+      osc.frequency.setValueAtTime(isUrgent ? 950 : 880, ctx.currentTime);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + (isUrgent ? 0.8 : 0.4));
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + (isUrgent ? 0.8 : 0.4));
 
-      // Second tone (higher confirmation chime)
-      const osc2 = ctx.createOscillator();
-      const gain2 = ctx.createGain();
-      osc2.type = 'sine';
-      osc2.frequency.setValueAtTime(1174.66, ctx.currentTime + 0.18);
-      gain2.gain.setValueAtTime(0.25, ctx.currentTime + 0.18);
-      gain2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
-      osc2.connect(gain2);
-      gain2.connect(ctx.destination);
-      osc2.start(ctx.currentTime + 0.18);
-      osc2.stop(ctx.currentTime + 0.6);
-
-      // Mobile device vibration pulse
       if (navigator.vibrate) {
-        navigator.vibrate([200, 100, 300]);
+        navigator.vibrate(isUrgent ? [400, 200, 400] : [200, 100, 300]);
       }
     } catch (e) {
       console.warn("Audio chime prevented:", e);
     }
   }
 
-  // Real Leaflet Map Elements
-  // let map = null;;
-
-
-  // Real Leaflet Map Elements
- // let map = null;;
-  let pickupMarker = null;
-  let dropMarker = null;
-  let routePolyline = null;
-  let pickupCoords = [22.6373, 86.7628]; // Default Belpahari [lat, lon]
+  var map = null;
+  var pickupMarker = null;
+  var dropMarker = null;
+  var routePolyline = null;
+  var pickupCoords = [22.6373, 86.7628]; // Odalchua / Belpahari default
 
   function initMap() {
-    if (!map && document.getElementById('liveMap')) {
+    if (!map && document.getElementById('liveMap') && typeof L !== 'undefined') {
       map = L.map('liveMap', { zoomControl: false }).setView(pickupCoords, 12);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap'
       }).addTo(map);
 
-      pickupMarker = L.marker(pickupCoords).addTo(map).bindPopup("Pickup: Belpahari").openPopup();
+      pickupMarker = L.marker(pickupCoords).addTo(map).bindPopup("Pickup: Odalchua Region").openPopup();
     }
   }
 
-  // Real Road Routing Engine (OSRM Driving API)
   async function calculateRealRoadRoute(startLat, startLon, destLat, destLon) {
-    const url = `https://router.project-osrm.org/route/v1/driving/${startLon},${startLat};${destLon},${destLat}?overview=full&geometries=geojson`;
+    var url = 'https://router.project-osrm.org/route/v1/driving/' + startLon + ',' + startLat + ';' + destLon + ',' + destLat + '?overview=full&geometries=geojson';
 
     try {
-      const res = await fetch(url);
-      const data = await res.json();
+      var res = await fetch(url);
+      var data = await res.json();
 
       if (data.routes && data.routes.length > 0) {
-        const route = data.routes[0];
-        const distKm = route.distance / 1000;
-        const durMins = Math.round(route.duration / 60);
+        var route = data.routes[0];
+        var distKm = route.distance / 1000;
+        var durMins = Math.round(route.duration / 60);
 
         if (routePolyline && map) map.removeLayer(routePolyline);
-        const latLngs = route.geometry.coordinates.map(function(c) {
-          return [c[1], c[0]];
-        });
+        var latLngs = route.geometry.coordinates.map(function(c) { return [c[1], c[0]]; });
 
         if (map) {
-          routePolyline = L.polyline(latLngs, { color: '#059669', weight: 5 }).addTo(map);
+          routePolyline = L.polyline(latLngs, { color: isEmergencyMode ? '#dc2626' : '#059669', weight: 5 }).addTo(map);
           map.fitBounds(routePolyline.getBounds(), { padding: [25, 25] });
         }
 
         updateFares(distKm);
-        const timeElem = document.getElementById('displayTime');
-        if (timeElem) timeElem.innerText = `~${durMins} mins`;
+        var timeElem = document.getElementById('displayTime');
+        if (timeElem) timeElem.innerText = '~' + durMins + ' mins';
       }
     } catch (err) {
       console.warn("OSRM Routing error:", err);
@@ -925,39 +961,47 @@
 
   function updateFares(distanceKm) {
     calculatedDistanceKm = distanceKm;
-    const rickshawFare = Math.max(30, Math.round(30 + (distanceKm * 10)));
-    const sedanFare = Math.max(60, Math.round(60 + (distanceKm * 15)));
-    const estMinutes = Math.max(5, Math.round((distanceKm / 30) * 60));
+    var rickshawFare = 0;
+    var sedanFare = 0;
 
-    const distElem = document.getElementById('displayDistance');
-    const timeElem = document.getElementById('displayTime');
-    const rickshawElem = document.getElementById('fareDisplayRickshaw');
-    const sedanElem = document.getElementById('fareDisplaySedan');
+    if (isSharedRide) {
+      rickshawFare = Math.max(20, Math.round(20 + (distanceKm * 4)));
+      sedanFare = Math.max(40, Math.round(40 + (distanceKm * 6)));
+    } else {
+      rickshawFare = Math.max(35, Math.round(35 + (distanceKm * 10)));
+      sedanFare = Math.max(70, Math.round(70 + (distanceKm * 15)));
+    }
+
+    if (isEmergencyMode) {
+      rickshawFare = Math.round(rickshawFare * 1.15);
+      sedanFare = Math.round(sedanFare * 1.15);
+    }
+
+    var estMinutes = Math.max(5, Math.round((distanceKm / 30) * 60));
+    var distElem = document.getElementById('displayDistance');
+    var timeElem = document.getElementById('displayTime');
+    var rickshawElem = document.getElementById('fareDisplayRickshaw');
+    var sedanElem = document.getElementById('fareDisplaySedan');
 
     if (distElem) distElem.innerText = distanceKm.toFixed(1) + ' km';
     if (timeElem && !timeElem.innerText.includes('mins')) timeElem.innerText = '~' + estMinutes + ' mins';
     if (rickshawElem) rickshawElem.innerText = '₹' + rickshawFare;
     if (sedanElem) sedanElem.innerText = '₹' + sedanFare;
 
-    if (selectedVehicle === "Mini / E-Rickshaw") {
-      selectedFare = rickshawFare;
-    } else {
-      selectedFare = sedanFare;
-    }
+    selectedFare = (selectedVehicle.indexOf("Toto") !== -1) ? rickshawFare : sedanFare;
   }
 
   function showView(viewId) {
-    const views = document.querySelectorAll('.view');
-    views.forEach(function(v) {
+    document.querySelectorAll('.view').forEach(function(v) {
       v.classList.remove('active');
       v.style.display = 'none';
     });
 
-    const target = document.getElementById(viewId);
+    var target = document.getElementById(viewId);
     if (target) {
       target.classList.add('active');
       target.style.display = 'flex';
-      const screen = document.querySelector('.app-screen');
+      var screen = document.querySelector('.app-screen');
       if (screen) screen.scrollTop = 0;
     }
 
@@ -970,129 +1014,115 @@
   }
 
   function activateTab(tabId) {
-    document.querySelectorAll('.nav-item').forEach(function(btn) {
-      btn.classList.remove('active');
-    });
-    const activeBtn = document.getElementById(tabId);
+    document.querySelectorAll('.nav-item').forEach(function(btn) { btn.classList.remove('active'); });
+    var activeBtn = document.getElementById(tabId);
     if (activeBtn) activeBtn.classList.add('active');
   }
 
-  function renderTripUI(route, type, fare, status) {
+  function renderTripUI(route, type, fare, status, isEm) {
     var box = document.getElementById('customerTripsContainer');
     if (!box) return;
     var div = document.createElement('div');
     div.className = 'item-card';
-    div.innerHTML = '<div class="item-info"><span class="item-avatar">🛺</span><div><div class="item-title">' + route + '</div><div class="item-sub">' + type + ' • ' + status + '</div></div></div><div class="item-fare"><strong>₹' + fare + '</strong></div>';
+    div.innerHTML = '<div class="item-info"><span class="item-avatar">' + (isEm ? '🚨' : '🛺') + '</span><div><div class="item-title">' + route + '</div><div class="item-sub">' + type + ' • ' + status + '</div></div></div><div class="item-fare"><strong>₹' + fare + '</strong></div>';
     box.appendChild(div);
   }
 
   window.acceptTrip = async function(docId) {
-    if (!db) {
-      alert("Demo mode: Trip accepted!");
-      return;
-    }
+    if (!db) { alert("Trip accepted!"); return; }
     try {
-      await db.collection("bookings").doc(docId).update({
-        status: "In Progress"
-      });
-      alert("Trip accepted! Head to customer pickup location.");
-    } catch (e) {
-      alert("Error: " + e.message);
-    }
+      await db.collection("bookings").doc(docId).update({ status: "In Progress" });
+      alert("Trip accepted! Driver en route.");
+    } catch (e) { alert("Error: " + e.message); }
   };
 
   window.completeTrip = async function(docId, fare) {
-    if (!db) {
-      alert("Demo mode: Trip completed!");
-      return;
-    }
+    if (!db) { alert("Trip completed!"); return; }
     try {
-      await db.collection("bookings").doc(docId).update({
-        status: "Completed"
-      });
-      alert("Trip completed! Collect ₹" + fare + " cash from customer.");
-    } catch (e) {
-      alert("Error: " + e.message);
-    }
+      await db.collection("bookings").doc(docId).update({ status: "Completed" });
+      alert("Trip completed! Collect ₹" + fare + " cash.");
+    } catch (e) { alert("Error: " + e.message); }
   };
+
   document.addEventListener('DOMContentLoaded', function() {
     var tabHome = document.getElementById('tabHome');
     var tabTrips = document.getElementById('tabTrips');
     var tabProfile = document.getElementById('tabProfile');
 
-    if (tabHome) {
-      tabHome.addEventListener('click', function() {
-        activateTab('tabHome');
-        showView('homeView');
-      });
-    }
-
-    if (tabTrips) {
-      tabTrips.addEventListener('click', function() {
-        activateTab('tabTrips');
-        showView('tripsView');
-      });
-    }
-
-    if (tabProfile) {
-      tabProfile.addEventListener('click', function() {
-        activateTab('tabProfile');
-        showView('profileView');
-      });
-    }
+    if (tabHome) tabHome.addEventListener('click', function() { activateTab('tabHome'); showView('homeView'); });
+    if (tabTrips) tabTrips.addEventListener('click', function() { activateTab('tabTrips'); showView('tripsView'); });
+    if (tabProfile) tabProfile.addEventListener('click', function() { activateTab('tabProfile'); showView('profileView'); });
 
     document.querySelectorAll('.service-card').forEach(function(card) {
       card.addEventListener('click', function() {
         var dest = card.getAttribute('data-goto');
-        if (dest) showView(dest);
+        if (dest) {
+          isEmergencyMode = false;
+          showView(dest);
+        }
       });
     });
 
     var btnBanner = document.getElementById('btnBannerBook');
     if (btnBanner) {
       btnBanner.addEventListener('click', function() {
+        isEmergencyMode = false;
+        showView('etaxiView');
+      });
+    }
+
+    var btnEmergency = document.getElementById('btnEmergencyTrigger');
+    if (btnEmergency) {
+      btnEmergency.addEventListener('click', function() {
+        isEmergencyMode = true;
+        var heading = document.getElementById('etaxiTitleHeading');
+        if (heading) heading.innerText = '🚨 Emergency Hospital Ride';
+        var drop = document.getElementById('etaxiDrop');
+        if (drop) drop.value = 'Belpahari Rural Hospital';
         showView('etaxiView');
       });
     }
 
     var btnDriver = document.getElementById('btnGoDriver');
-    if (btnDriver) {
-      btnDriver.addEventListener('click', function() {
-        showView('driverDashboardView');
-      });
-    }
+    if (btnDriver) btnDriver.addEventListener('click', function() { showView('driverDashboardView'); });
 
     var btnAdmin = document.getElementById('btnGoAdmin');
-    if (btnAdmin) {
-      btnAdmin.addEventListener('click', function() {
-        showView('adminDashboardView');
+    if (btnAdmin) btnAdmin.addEventListener('click', function() { showView('adminDashboardView'); });
+
+    // Sharing Toggle
+    var btnShared = document.getElementById('btnModeShared');
+    var btnFull = document.getElementById('btnModeFull');
+    if (btnShared && btnFull) {
+      btnShared.addEventListener('click', function() {
+        isSharedRide = true;
+        btnShared.classList.add('active');
+        btnFull.classList.remove('active');
+        updateFares(calculatedDistanceKm);
+      });
+      btnFull.addEventListener('click', function() {
+        isSharedRide = false;
+        btnFull.classList.add('active');
+        btnShared.classList.remove('active');
+        updateFares(calculatedDistanceKm);
       });
     }
 
-    // Auto-GPS Current Satellite Location
+    // Rural GPS with Village/Hamlet Hierarchy for Odalchua
     var btnAutoGps = document.getElementById('btnAutoGps');
     var inputPickup = document.getElementById('etaxiPickup');
     var gpsStatus = document.getElementById('gpsStatus');
 
     if (btnAutoGps) {
       btnAutoGps.addEventListener('click', function() {
-        if (!navigator.geolocation) {
-          alert('Geolocation not supported by device.');
-          return;
-        }
-
+        if (!navigator.geolocation) { alert('Geolocation not supported.'); return; }
         btnAutoGps.innerText = '⌛ Locating...';
         btnAutoGps.disabled = true;
-        if (gpsStatus) {
-          gpsStatus.style.display = 'block';
-          gpsStatus.style.color = '#059669';
-          gpsStatus.innerText = 'Connecting to GPS satellites...';
-        }
+        if (gpsStatus) { gpsStatus.style.display = 'block'; gpsStatus.innerText = 'Acquiring satellite lock...'; }
 
         navigator.geolocation.getCurrentPosition(
-          async function(position) {
-            var lat = position.coords.latitude;
-            var lon = position.coords.longitude;
+          async function(pos) {
+            var lat = pos.coords.latitude;
+            var lon = pos.coords.longitude;
             pickupCoords = [lat, lon];
 
             if (map) {
@@ -1104,8 +1134,7 @@
             try {
               var res = await fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon);
               var data = await res.json();
-                            var addr = data.address || {};
-              // Priority: 1. Gaon/Hamlet -> 2. Road/Locality -> 3. Gram Panchayat/Block
+              var addr = data.address || {};
               var villageOrPlace = addr.hamlet || addr.village || addr.isolated_dwelling || addr.suburb || addr.neighbourhood || addr.residential || '';
               var roadOrArea = addr.road || addr.locality || '';
               var blockOrTown = addr.town || addr.city || addr.subdistrict || addr.county || '';
@@ -1116,39 +1145,27 @@
               if (blockOrTown && blockOrTown !== villageOrPlace) addressParts.push(blockOrTown);
 
               var fullAddr = addressParts.join(', ');
-
-              // Agar gaon ka exact name mil jaye toh display karein
               inputPickup.value = fullAddr.trim() ? fullAddr : (data.display_name ? data.display_name.split(',')[0] : 'Lat: ' + lat.toFixed(4) + ', Lon: ' + lon.toFixed(4));
-
-
-              inputPickup.value = fullAddr.trim() ? fullAddr : ('Lat: ' + lat.toFixed(4) + ', Lon: ' + lon.toFixed(4));
               if (gpsStatus) gpsStatus.innerText = '✔ Location set accurately.';
             } catch (err) {
               inputPickup.value = 'GPS: ' + lat.toFixed(5) + ', ' + lon.toFixed(5);
-              if (gpsStatus) gpsStatus.innerText = '✔ Coordinates applied.';
             }
-
             btnAutoGps.innerText = '📍 Use Current Location';
             btnAutoGps.disabled = false;
           },
-          function(error) {
+          function(err) {
             btnAutoGps.innerText = '📍 Use Current Location';
             btnAutoGps.disabled = false;
-            alert('Location permission denied or GPS unavailable.');
-            if (gpsStatus) {
-              gpsStatus.style.color = '#dc2626';
-              gpsStatus.innerText = '❌ Turn ON GPS & Allow permission.';
-            }
+            alert('Location permission denied.');
           },
           { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
         );
       });
     }
 
-    // Live Geocoding & Driving Road Routing on Drop Search
+    // Drop Search with Regional Bias
     var dropSearchTimeout = null;
     var dropInput = document.getElementById('etaxiDrop');
-
     if (dropInput) {
       dropInput.addEventListener('input', function() {
         clearTimeout(dropSearchTimeout);
@@ -1158,7 +1175,6 @@
         dropSearchTimeout = setTimeout(async function() {
           try {
             var res = await fetch('https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=in&q=' + encodeURIComponent(q + ', Jhargram, West Bengal'));
-
             var results = await res.json();
 
             if (results && results.length > 0) {
@@ -1169,7 +1185,6 @@
                 if (dropMarker) map.removeLayer(dropMarker);
                 dropMarker = L.marker([destLat, destLon]).addTo(map).bindPopup("Drop: " + results[0].display_name.split(',')[0]).openPopup();
               }
-
               calculateRealRoadRoute(pickupCoords[0], pickupCoords[1], destLat, destLon);
             }
           } catch (e) {
@@ -1179,114 +1194,40 @@
       });
     }
 
-    // Vehicle Option Tap
     document.querySelectorAll('.vehicle-option').forEach(function(opt) {
       opt.addEventListener('click', function() {
-        document.querySelectorAll('.vehicle-option').forEach(function(o) {
-          o.style.border = '1px solid var(--border)';
-        });
+        document.querySelectorAll('.vehicle-option').forEach(function(o) { o.style.border = '1px solid var(--border)'; });
         opt.style.border = '2px solid var(--primary)';
-        selectedVehicle = opt.getAttribute('data-name') || "Mini / E-Rickshaw";
-
-        var base = Number(opt.getAttribute('data-base')) || 30;
-        var perKm = Number(opt.getAttribute('data-perkm')) || 10;
-        selectedFare = Math.max(base, Math.round(base + (calculatedDistanceKm * perKm)));
+        selectedVehicle = opt.getAttribute('data-name') || "Toto / E-Rickshaw";
+        updateFares(calculatedDistanceKm);
       });
     });
-
-    // Driver Online/Offline
-    var btnDuty = document.getElementById('btnDriverDutyToggle');
-    var dutySub = document.getElementById('driverStatusSubtitle');
-    if (btnDuty) {
-      btnDuty.addEventListener('click', function() {
-        isDriverOnline = !isDriverOnline;
-        if (isDriverOnline) {
-          btnDuty.innerText = '● Online';
-          btnDuty.style.background = '#dcfce7';
-          btnDuty.style.color = '#059669';
-          if (dutySub) dutySub.innerText = 'Ready for customer requests';
-        } else {
-          btnDuty.innerText = '○ Offline';
-          btnDuty.style.background = '#fee2e2';
-          btnDuty.style.color = '#dc2626';
-          if (dutySub) dutySub.innerText = 'Not receiving new ride requests';
-        }
-      });
-    }
-
-    var btnLocalBus = document.getElementById('btnLocalBus');
-    var btnTourPkg = document.getElementById('btnTourPkg');
-    var localList = document.getElementById('localBusList');
-    var tourList = document.getElementById('tourPkgList');
-
-    if (btnLocalBus && btnTourPkg) {
-      btnLocalBus.addEventListener('click', function() {
-        btnLocalBus.classList.add('active');
-        btnTourPkg.classList.remove('active');
-        if (localList) localList.style.display = 'flex';
-        if (tourList) tourList.style.display = 'none';
-      });
-
-      btnTourPkg.addEventListener('click', function() {
-        btnTourPkg.classList.add('active');
-        btnLocalBus.classList.remove('active');
-        if (localList) localList.style.display = 'none';
-        if (tourList) tourList.style.display = 'flex';
-      });
-    }
-
-    document.querySelectorAll('.btn-back').forEach(function(b) {
-      b.addEventListener('click', function() {
-        activateTab('tabHome');
-        showView('homeView');
-      });
-    });
-
-    var langModal = document.getElementById('langModal');
-    var btnOpenLang = document.getElementById('btnOpenLang');
-    var btnCloseLang = document.getElementById('btnCloseLang');
-
-    if (btnOpenLang && langModal) {
-      btnOpenLang.addEventListener('click', function() {
-        langModal.classList.add('show');
-      });
-    }
-
-    if (btnCloseLang && langModal) {
-      btnCloseLang.addEventListener('click', function() {
-        langModal.classList.remove('show');
-      });
-    }
 
     var btnConfirmRide = document.getElementById('btnConfirmRide');
     if (btnConfirmRide) {
       btnConfirmRide.addEventListener('click', async function() {
-        var pickup = document.getElementById('etaxiPickup').value || 'Belpahari';
+        var pickup = document.getElementById('etaxiPickup').value || 'Odalchua';
         var drop = document.getElementById('etaxiDrop').value;
+        if (!drop) { alert('Please enter a destination.'); return; }
 
-        if (!drop) {
-          alert('Please enter a destination.');
-          return;
-        }
+        var route = pickup + ' ➔ ' + drop;
+        var rideType = (isEmergencyMode ? '🚨 EMERGENCY: ' : '') + selectedVehicle + (isSharedRide ? ' (Shared)' : ' (Full)');
 
-        var route = pickup + ' → ' + drop;
         if (db) {
           try {
             await db.collection('bookings').add({
               route: route,
-              vehicle: selectedVehicle,
+              vehicle: rideType,
               fare: selectedFare,
-              status: 'Requested',
+              status: isEmergencyMode ? 'EMERGENCY REQUEST' : 'Requested',
               distance: calculatedDistanceKm.toFixed(1) + ' km',
+              isUrgent: isEmergencyMode,
               createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
-            alert('Ride requested! Exact Fare: ₹' + selectedFare);
-          } catch (e) {
-            alert('Booking failed: ' + e.message);
-          }
+            alert('Ride requested! Cash Fare: ₹' + selectedFare);
+          } catch (e) { alert('Booking error: ' + e.message); }
         } else {
-          renderTripUI(route, selectedVehicle, selectedFare, 'Requested');
-          alert('Ride request saved locally!');
+          renderTripUI(route, rideType, selectedFare, 'Requested', isEmergencyMode);
         }
 
         activateTab('tabTrips');
@@ -1294,94 +1235,32 @@
       });
     }
 
-    var btnBookDirectList = document.querySelectorAll('.btn-book-direct');
-    btnBookDirectList.forEach(function(b) {
-      b.addEventListener('click', async function() {
-        var title = b.getAttribute('data-title') || 'Trip';
-        var fare = parseInt(b.getAttribute('data-fare') || '50', 10);
-
-        if (db) {
-          try {
-            await db.collection('bookings').add({
-              route: title,
-              vehicle: title,
-              fare: fare,
-              status: 'Confirmed',
-              createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            alert('Booking confirmed!');
-          } catch (e) {
-            alert('Booking failed: ' + e.message);
-          }
-        } else {
-          renderTripUI(title, 'Direct Booking', fare, 'Confirmed');
-          alert('Booking confirmed locally!');
-        }
-
-        activateTab('tabTrips');
-        showView('tripsView');
-      });
+    document.querySelectorAll('.btn-back').forEach(function(b) {
+      b.addEventListener('click', function() { activateTab('tabHome'); showView('homeView'); });
     });
 
-    var btnSubmitReq = document.getElementById('btnSubmitReq');
-    if (btnSubmitReq) {
-      btnSubmitReq.addEventListener('click', async function() {
-        var f = document.getElementById('postFrom').value;
-        var t = document.getElementById('postTo').value;
-        var d = document.getElementById('postDesc').value;
-
-        if (!t) {
-          alert('Please fill in destination.');
-          return;
-        }
-
-        var route = f + ' → ' + t;
-        if (db) {
-          try {
-            await db.collection('bookings').add({
-              route: route,
-              vehicle: 'Custom Cargo/Group',
-              fare: 0,
-              desc: d,
-              status: 'Pending Quote',
-              createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            alert('Requirement posted!');
-          } catch (e) {
-            alert('Error: ' + e.message);
-          }
-        } else {
-          renderTripUI(route, 'Requirement', 0, 'Pending Quote');
-          alert('Requirement saved locally!');
-        }
-
-        activateTab('tabTrips');
-        showView('tripsView');
-      });
-    }
-
+    // Real-Time Firestore Sync
     if (db) {
       db.collection('bookings')
         .orderBy('createdAt', 'desc')
-        .limit(30)
+        .limit(25)
         .onSnapshot(function(snapshot) {
           var tripsContainer = document.getElementById('customerTripsContainer');
           var driverQueue = document.getElementById('driverLiveQueue');
           var driverCount = document.getElementById('driverLiveTripsCount');
           var driverEarnings = document.getElementById('driverLiveEarnings');
           var driverCompleted = document.getElementById('driverCompletedTripsCount');
-          
           var adminBookingsList = document.getElementById('adminBookingsList');
           var adminTotalBookings = document.getElementById('adminTotalBookings');
           var adminGrossFare = document.getElementById('adminGrossFare');
-          var adminPendingQuotes = document.getElementById('adminPendingQuotes');
 
           if (tripsContainer) tripsContainer.innerHTML = '';
           if (driverQueue) driverQueue.innerHTML = '';
           if (adminBookingsList) adminBookingsList.innerHTML = '';
-          // Play sound if a new booking arrived and driver is online
+
           if (lastBookingCount !== null && snapshot.docs.length > lastBookingCount && isDriverOnline) {
-            playDispatchAlert();
+            var newest = snapshot.docs[0].data();
+            playDispatchAlert(newest.isUrgent === true);
           }
           lastBookingCount = snapshot.docs.length;
 
@@ -1390,58 +1269,43 @@
           var completedCount = 0;
           var totalBookings = 0;
           var grossFareSum = 0;
-          var pendingQuotesCount = 0;
 
           snapshot.forEach(function(doc) {
             var data = doc.data();
             var route = data.route || 'Local Route';
             var fare = Number(data.fare) || 0;
             var status = data.status || 'Requested';
+            var isUrgent = (data.isUrgent === true);
 
             totalBookings++;
             grossFareSum += fare;
+            if (status === 'Completed') { completedCount++; driverEarnTotal += fare; }
 
-            if (status === 'Pending Quote') {
-              pendingQuotesCount++;
-            }
+            if (tripsContainer) renderTripUI(route, data.vehicle || 'Ride', fare, status, isUrgent);
 
-            if (status === 'Completed') {
-              completedCount++;
-              driverEarnTotal += fare;
-            }
-
-            if (tripsContainer) {
-              renderTripUI(route, data.vehicle || data.desc || 'Trip', fare, status);
-            }
-
-            if (driverQueue && (status === 'Requested' || status === 'In Progress')) {
+            if (driverQueue && (status === 'Requested' || status === 'In Progress' || status === 'EMERGENCY REQUEST')) {
               availableCount++;
               var card = document.createElement('div');
               card.className = 'item-card';
+              if (isUrgent) card.style.border = '2px solid #dc2626';
 
               var info = document.createElement('div');
               info.className = 'item-info';
-              info.innerHTML = '<span class="item-avatar">' + (status === 'In Progress' ? '🚖' : '🛺') + '</span>' +
-                '<div>' +
-                  '<div class="item-title">' + route + '</div>' +
-                  '<div class="item-sub">' + (data.vehicle || 'Ride') + ' • ₹' + fare + ' • <strong style="color:' + (status === 'In Progress' ? '#059669' : '#d97706') + '">' + status + '</strong></div>' +
-                '</div>';
+              info.innerHTML = '<span class="item-avatar">' + (isUrgent ? '🚨' : (status === 'In Progress' ? '🚖' : '🛺')) + '</span>' +
+                '<div><div class="item-title">' + route + '</div><div class="item-sub">' + (data.vehicle || 'Ride') + ' • ₹' + fare + ' • <strong>' + status + '</strong></div></div>';
 
               var actionBtn = document.createElement('button');
               actionBtn.className = 'primary-btn';
               actionBtn.style.cssText = 'margin:0; padding:6px 12px; font-size:11px; white-space:nowrap;';
+              if (isUrgent) actionBtn.classList.add('sos-btn');
 
-              if (status === 'Requested') {
-                actionBtn.innerText = 'Accept';
-                actionBtn.onclick = function() {
-                  acceptTrip(doc.id);
-                };
+              if (status === 'Requested' || status === 'EMERGENCY REQUEST') {
+                actionBtn.innerText = 'Accept Ride';
+                actionBtn.onclick = function() { acceptTrip(doc.id); };
               } else if (status === 'In Progress') {
                 actionBtn.innerText = 'Collect ₹' + fare;
                 actionBtn.style.background = '#059669';
-                actionBtn.onclick = function() {
-                  completeTrip(doc.id, fare);
-                };
+                actionBtn.onclick = function() { completeTrip(doc.id, fare); };
               }
 
               card.appendChild(info);
@@ -1460,12 +1324,8 @@
           if (driverCount) driverCount.innerText = availableCount.toString();
           if (driverEarnings) driverEarnings.innerText = '₹' + driverEarnTotal.toLocaleString('en-IN');
           if (driverCompleted) driverCompleted.innerText = completedCount.toString();
-
           if (adminTotalBookings) adminTotalBookings.innerText = totalBookings.toString();
           if (adminGrossFare) adminGrossFare.innerText = '₹' + grossFareSum.toLocaleString('en-IN');
-          if (adminPendingQuotes) adminPendingQuotes.innerText = pendingQuotesCount.toString();
-        }, function(error) {
-          console.error("Firestore sync error:", error);
         });
     }
   });
